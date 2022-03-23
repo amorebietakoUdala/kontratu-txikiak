@@ -1,0 +1,58 @@
+{% if contracts is defined and contracts|length > 0 %}
+
+<table class="table" {{ stimulus_controller('table', {
+   'exportName': 'contracts',
+}) }}>
+   <thead>
+      <tr>
+            <th data-sortable="true">Id</th>
+            <th data-sortable="true">{{ 'contract.code' | trans }}</th>
+            <th data-sortable="true">{{ 'contract.type' | trans }}</th>
+            {% if app.request.locale == 'es' %}
+               <th data-sortable="true">{{"contract.subjectEs" | trans }}</th>
+            {% else %}
+               <th data-sortable="true">{{"contract.subjectEu" | trans }}</th>
+            {% endif %}
+            <th data-sortable="true">{{ 'contract.amountWithVAT' | trans }}</th>
+            <th data-sortable="true">{{ 'contract.duration' | trans }}</th>
+            <th data-sortable="true">{{ 'contract.identificationType' | trans }}</th>
+            <th data-sortable="true">{{ 'contract.idNumber' | trans }}</th>
+            <th data-sortable="true">{{ 'contract.enterprise' | trans }}</th>
+            <th data-sortable="true">{{ 'contract.awardDate' | trans }}</th>
+            <th data-sortable="true">{{ 'contract.user' | trans }}</th>
+            <th data-sortable="true" data-field="options">{{"table.options" | trans }}</th>
+      </tr>
+   </thead>
+   <tbody>
+   {% for contract in contracts %}
+      <tr>
+            <td>{{ contract.id }}</td>
+            <td>{{ contract.code }}</td>
+            <td>{{ contract.type }}</td>
+            {% if app.request.locale == 'es' %}
+               <td>{{contract.subjectEs}}</td>
+            {% else %}
+               <td>{{contract.subjectEu}}</td>
+            {% endif %}
+            <td>{{ contract.amountWithVAT | number_format(2, ',', '.') }} €</td>
+            <td>{{ contract.duration }} ({{ contract.durationType.name }})</td>
+            <td>{{ contract.identificationType }}</td>
+            <td>{{ contract.idNumber }}</td>
+            <td>{{ contract.enterprise }}</td>
+            <td>{{ contract.awardDate | date('Y-m-d h:i:s')}}</td>
+            <td>{{ contract.user }}</td>
+            <td>
+               <a href="{{ path('app_contract_show', {'id': contract.id }) }}"><i class="fa fa-eye" title='{{ "btn.show" | trans | capitalize }}'></i></a>&nbsp;
+               <a href="{{ path('app_contract_edit', {'id': contract.id }) }}"><i class="fa fa-edit" title='{{ "btn.edit" | trans | capitalize }}'></i></a>&nbsp;
+               <a href="#" {{ stimulus_controller('alert', {
+                  'confirmationText': 'message.confirmationText' | trans({},'alerts'),
+                  'redirect' : true,
+               }) }} data-url="{{ path('app_contract_delete', {'id': contract.id }) }}" data-token="{{ csrf_token('delete'~contract.id ) }}" data-action="alert#confirm"><i class="fa fa-trash" title='{{ "btn.delete" | trans | capitalize }}'></i></a>&nbsp;
+            </td>
+      </tr>
+   {% endfor %}
+   </tbody>
+</table>
+{% else %}
+   <div class="alert alert-secondary mt-3" role="alert">{{"messages.results0" | trans }}</div>
+{% endif %}

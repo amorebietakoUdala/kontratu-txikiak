@@ -19,6 +19,22 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Resources/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    Symfony\Component\Ldap\Ldap:
+        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
+
+    ldap:
+        alias: Symfony\Component\Ldap\Ldap
+            
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            -   host: '%env(LDAP_HOST)%'
+                port: '%env(LDAP_PORT)%'
+                encryption: none
+                options:
+                    protocol_version: 3
+                    referrals: false    

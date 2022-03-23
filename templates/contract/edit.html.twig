@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if new %}
+        {% set title = 'title.contract.new' | trans | capitalize %}
+    {% elseif readonly %}
+        {% set title = 'title.contract.show' | trans | capitalize %}
+    {% else %}
+        {% set title = 'title.contract.edit' | trans | capitalize %}
+    {% endif %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    {% if new %}
+        {% set title = 'title.contract.new' | trans | capitalize %}
+    {% elseif readonly %}
+        {% set title = 'title.contract.show' | trans | capitalize %}
+    {% else %}
+        {% set title = 'title.contract.edit' | trans | capitalize %}
+    {% endif %}
+    <div class="d-flex align-items-center">
+        <h1>{{ title }}</h1>
+        {% if not new and not readonly %}
+            &nbsp;<span>{{ include('contract/_delete_form.html.twig', {
+                'contract' : contract,
+            }) }}</span>
+        {% endif %}
+    </div>
+   {{ include('contract/_form.html.twig') }}
+{% endblock %}
+

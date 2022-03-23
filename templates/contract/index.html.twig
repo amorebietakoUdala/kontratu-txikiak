@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.contracts' | trans }}{% endblock %}
+
+{% block body %}
+   <h1 class="h2">{{'title.contracts' | trans }}</h1>
+   <div class="container-fluid">
+      {{ include('contract/_searchForm.html.twig') }}
+      <div data-reload-content-target="content">
+         {{ include('contract/_list.html.twig') }}
+      </div>
+      <div class="float-right fixed-bottom-right"><a href="{{ path('app_contract_new') }}" class="btn btn-primary rounded-circle"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></div>
+      {{ include('common/_alert.html.twig', {
+         'confirmationText' : 'messages.confirmationDetail' | trans 
+      }) }}
+   </div>
+{% endblock %}

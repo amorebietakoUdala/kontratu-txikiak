@@ -1,0 +1,57 @@
+{{ form_start(form) }}
+    <div class="container-fluid" {{ stimulus_controller('datepicker', {
+               'selector': '.js-datepicker',
+            }) 
+        }}
+    >
+        <div class="row align-items-start">
+            <div class="col-lg-2">
+                {{ form_row(form.code) }}
+            </div>
+            <div class="col-lg-3">
+                {{ form_row(form.type) }}
+            </div>
+            <div class="col-lg-2">
+                {{ form_row(form.amountWithVAT) }}
+            </div>
+            <div class="col-lg-1">
+                {{ form_row(form.duration) }}
+            </div>
+            <div class="col-lg-2">
+                {{ form_row(form.durationType) }}
+            </div>
+            <div class="col-lg-2" {{ stimulus_controller('datepicker', {
+                'selector': '.js-datepicker'
+            })}}>
+                {{ form_row(form.awardDate) }}
+            </div>
+        </div>
+        <div class="row align-items-start">
+            <div class="col-lg">
+                {{ form_row(form.subjectEs) }}
+            </div>
+            <div class="col-lg">
+                {{ form_row(form.subjectEu) }}
+            </div>
+        </div>
+        <div class="row align-items-start">
+            <div class="col-lg-2">
+                {{ form_row(form.identificationType) }}
+            </div>
+            <div class="col-lg-2">
+                {{ form_row(form.idNumber) }}
+            </div>
+            <div class="col-lg-2">
+                {{ form_row(form.enterprise) }}
+            </div>
+        </div>
+        <div class="row align-items-start mt-2">
+            <div class="col-lg">
+                {% if not readonly %}
+                    <button class="btn btn-primary">{{ 'btn.save' | trans }}</button>
+                {% endif %}
+                <button class="btn btn-secondary js-back" data-url="{{ path('app_contract_index') }}">{{ 'btn.cancel' | trans }}</button>
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,22 @@
+{{ form_start(form) }}
+   <div class="container-fluid">
+      <div class="row align-items-center" {{ stimulus_controller('datepicker', {
+               'selector': '.js-datepicker',
+            }) }}>
+            <div class="col-lg-2">
+               {{ form_label(form.startDate) }}
+               {{ form_widget(form.startDate) }}
+               {{ form_errors(form.startDate) }}
+            </div>
+            <div class="col-lg-2">
+               {{ form_label(form.endDate) }}
+               {{ form_widget(form.endDate) }}
+               {{ form_errors(form.endDate) }}
+            </div>
+            <div class="col-lg-2">
+               <button class="btn btn-primary">{{ 'btn.search' | trans }}</button>
+               <button class="btn btn-secondary" type="button" onclick="javascript:this.form.reset();">{{ 'btn.clean' | trans }}</button>
+            </div>
+      </div>
+   </div>
+{{ form_end(form) }}

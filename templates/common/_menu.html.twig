@@ -1,0 +1,33 @@
+<!-- Boostrap 5 Menu -->
+<nav class="navbar navbar-expand navbar-dark bg-dark mb-1">
+  <a class="navbar-brand" href="#">&nbsp;</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+		<li class="nav-item">
+		  <a class="nav-link {{ 
+			  app.request.attributes.get('_route') == 'app_contract_index' 
+		  ? 'active' : '' }}" 
+		  	  href="{{ path('app_home') }}">{{ 'navitem.contracts' | trans | capitalize }}</a>
+		</li>
+		{% if is_granted('ROLE_ADMIN') %}
+		<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle
+				{{ ( app.request.attributes.get('_route') == 'admin_user_list' 
+						 )	
+					? ' active' : '' 
+				}}"
+				data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ 'navitem.administration' | trans | capitalize }}</a>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="{{ path('admin_user_list') }}">{{"navitem.users" | trans | capitalize}}</a></li>
+			</ul>
+		</li>
+		{% endif %}}
+    </ul>
+  </div>
+</nav>
+		
+

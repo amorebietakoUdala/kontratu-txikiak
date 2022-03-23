@@ -1,0 +1,16 @@
+@import '~bootstrap-table/dist/bootstrap-table';
+
+thead {
+   line-height: 1rem;
+   font-size: 0.8rem;
+}
+
+tbody {
+   line-height: 1rem;
+   font-size: 0.8rem;
+}
+
+tbody a {
+   text-decoration: none;
+   font-size: 1rem;
+}
