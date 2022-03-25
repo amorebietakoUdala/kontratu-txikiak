@@ -256,7 +256,7 @@ class ContractController extends AbstractController
         $sheet->setCellValue((++$startColumn).$startRow, $contract->getIdentificationType());
         $sheet->setCellValue((++$startColumn).$startRow, $contract->getIdNumber());
         $sheet->setCellValue((++$startColumn).$startRow, $contract->getEnterprise());
-        $sheet->setCellValue((++$startColumn).$startRow, $contract->getAwardDate()->format('d-m-Y'));
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getAwardDate()->format('d/m/Y'));
         $sheet->setCellValue((++$startColumn).$startRow, '');
         return $sheet;
     }
