@@ -238,7 +238,7 @@ class ContractController extends AbstractController
             "Content-Type" => 'application/vnd.ms-excel',
         ]);
         
-        return $response->setContent(file_get_contents('/var/www/html/SF5/kontratu-txikiak/public/downloads/05featuredemo.xlsx'));        
+        return $response->setContent(file_get_contents($rootDir."/public/downloads/$fileName"));        
     }
 
     private function fillContract(Worksheet &$sheet, int $startRow, Contract $contract) {
