@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatableMessage;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ContractController extends AbstractController
 {
@@ -33,6 +34,7 @@ class ContractController extends AbstractController
             /** @var Contract $data */
             $data = $form->getData();
             if ( !$this->checkForErrors($data, $repo) ) {
+                $data->setUser($request->getUser());
                 $em->persist($data);
                 $em->flush();
                 $this->addFlash('success', 'contract.saved');
@@ -50,23 +52,17 @@ class ContractController extends AbstractController
     /**
      * @Route("/{_locale}/contract/download", name="app_contract_download")
      */
-    public function download(Request $request) {
-        // TODO 
-        $inputFileName = '/var/www/html/SF5/kontratu-txikiak/src/Resources/PlantillaCargaMenores.xlsx';
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $spreadsheet = $reader->load($inputFileName);
-        $spreadsheet->getActiveSheet()->setCellValue('A7', 12345.6789);
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $writer->setPreCalculateFormulas(false);
-        $writer->save("/var/www/html/SF5/kontratu-txikiak/public/downloads/05featuredemo.xlsx");
-
-        // Headers for download 
-        $response = new Response(null, 200,[
-            'Content-Disposition' => "attachment; filename=\"contracts.xlsx\"",
-            "Content-Type" => 'application/vnd.ms-excel',
+    public function download(Request $request, ContractRepository $repo) {
+        $form = $this->createForm(ContractSearchFormType::class, null, [
+            'locale' => $request->getLocale(),
         ]);
-        
-        return $response->setContent(file_get_contents('/var/www/html/SF5/kontratu-txikiak/public/downloads/05featuredemo.xlsx'));
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $contracts = $repo->findByAwardDate($data['startDate'], $data['endDate']);
+        }
+        return $this->generateSpreadSheet($contracts);
     }
 
     /**
@@ -187,39 +183,81 @@ class ContractController extends AbstractController
             ]));
             return true;
         }
-
         if ( $contract->getDuration() > 99999 ) {
             $this->addFlash('error', 'error.invalidDuration');
             return true;
         }
-
         if ( null !== $contract->getType()->getMaxAmount() && $contract->getAmountWithVAT() > $contract->getType()->getMaxAmount() ) {
             $this->addFlash('error', new TranslatableMessage('error.exceededMaxAmountForType', [
                 '{maxAmount}' => $contract->getType()->getMaxAmount(),
             ]));
             return true;
         }
-
         if ( $contract->getAwardDate() > new \DateTime() ) {
             $this->addFlash('error', 'error.invalidAwardDate');
             return true;
         }
-
         if ( $contract->getIdentificationType()->getId() === IdentificationType::IDENTIFICATION_TYPE_CIF && Validaciones::valida_nif_cif_nie($contract->getIdNumber()) !== 2 ) {
             $this->addFlash('error', new TranslatableMessage('error.cifNotValid', [
                 '{cif}' => $contract->getIdNumber(),
             ]));
             return true;
         }
-
         if ( $contract->getIdentificationType()->getId() === IdentificationType::IDENTIFICATION_TYPE_NIF && Validaciones::valida_nif_cif_nie($contract->getIdNumber()) !== 1 ) {
             $this->addFlash('error', new TranslatableMessage('error.nifNotValid', [
                 '{nif}' => $contract->getIdNumber(),
             ]));
             return true;
         }
-        
         return false;
     }
 
+    /** 
+     * @param Contract[] $contracts 
+     * 
+     * @return Response
+     * */
+    private function generateSpreadSheet(array $contracts) {
+        $rootDir = $this->getParameter('kernel.project_dir');
+        $inputFileName = $rootDir.'/src/Resources/PlantillaCargaMenores.xlsx';
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $spreadsheet = $reader->load($inputFileName);
+        $startRow = 5;
+        $sheet = $spreadsheet->getActiveSheet();
+        foreach ($contracts as $contract) {
+            $this->fillContract($sheet,$startRow, $contract);
+            $startRow++;
+        }
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->setPreCalculateFormulas(false);
+        $fileName = 'contracts.xlsx';
+        $writer->save($rootDir."/public/downloads/$fileName");
+
+        $response = new Response(null, 200,[
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+            "Content-Type" => 'application/vnd.ms-excel',
+        ]);
+        
+        return $response->setContent(file_get_contents('/var/www/html/SF5/kontratu-txikiak/public/downloads/05featuredemo.xlsx'));        
+    }
+
+    private function fillContract(Worksheet &$sheet, int $startRow, Contract $contract) {
+        $startColumn = 'A';
+        $sheet->setCellValue($startColumn.$startRow, $contract->getCode());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getType());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getSubjectEs());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getSubjectEu());
+        $sheet->setCellValue((++$startColumn).$startRow, '');
+        $sheet->setCellValue((++$startColumn).$startRow, '');
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getAmountWithVAT());
+        $sheet->setCellValue((++$startColumn).$startRow, '');
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getDurationType());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getDuration());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getIdentificationType());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getIdNumber());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getEnterprise());
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getAwardDate()->format('d-m-Y'));
+        $sheet->setCellValue((++$startColumn).$startRow, '');
+        return $sheet;
+    }
 }

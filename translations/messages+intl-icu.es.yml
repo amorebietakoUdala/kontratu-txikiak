@@ -70,10 +70,7 @@ btn.delete: "Borrar"
 btn.show: "Ver"
 btn.search: "Buscar"
 btn.clean: "Limpiar"
-btn.copy: "Copiar"
-btn.register: "Apuntarse"
-btn.raffle: "Sortear"
-btn.close: "Cerrar"
+btn.download: "Descargar"
 
 # Titles
 title.contracts: "Contratos"
