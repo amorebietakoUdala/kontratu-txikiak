@@ -12,9 +12,6 @@ use Doctrine\Common\Annotations\Annotation;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Constraint;
 
-use function PHPUnit\Framework\isNan;
-use function PHPUnit\Framework\matches;
-
 /**
  * Description of ExpCodeValidator.
  * Checks if it a valida Expedient Code

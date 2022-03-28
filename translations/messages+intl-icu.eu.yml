@@ -1,0 +1,84 @@
+title.appTitle: "Kontratu txikiak"
+
+user.id: "Id"
+user.username: "Erabiltzailea"
+user.firstName: "Izena"
+user.roles: "Rolak"
+user.email: "Emaila"
+user.new_password: "Pasahitz berria"
+user.repeat_new_password: "Pasahitza errepikatu"
+
+messages.confirmacion: "Konfirmazioa"
+messages.confirmationDetail: "¿Ziur al zaude erregistroa ezabatu nahi duzula?"
+messages.results0: "Ez da erregistrorik aurkitu"
+messages.si: "Bai"
+messages.no: "Ez"
+messages.userSaved: "Erabiltzailea behar bezala gorde da"
+user_saved: "Erabiltzailea behar bezala gorde da"
+messages.userDeleted: "Erabiltzailea behar bezala ezabatu da"
+messages.existingUser: "Erabiltzaile izena edo emaila jadanik existitzen da"
+
+ROLE_USER: "Erabiltzailea"
+ROLE_ADMIN: "Administratzailea"
+
+# Menu
+navitem.contracts: "Kontratuak"
+navitem.administration: "Administrazioa"
+navitem.users: "Erabiltzaileak"
+link.logout: "Irten"
+
+# Buttons
+btn.cancel: "Itzuli"
+btn.save: "Gorde"
+btn.new: "Berria"
+btn.edit: "Editatu"
+btn.delete: "Ezabatu"
+btn.show: "Ikusi"
+btn.search: "Bilatu"
+btn.clean: "Garbitu"
+btn.download: "Jaitsi"
+
+# Titles
+title.contracts: "Kontratuak"
+title.contract.new: "Kontratu berria"
+title.contract.edit: "Kontratua editatu"
+title.contract.show: "Kontratua ikusi"
+
+# Labels
+table.options: "Aukerak"
+
+# Placeholders
+placeholder.choose: "Hautatu aukera bat"
+
+# Entities
+id: "Id"
+contract.code: "Espediente zenbakia"
+contract.type: "Mota"
+contract.subjectEs: "Kontratuaren objetua (Erdaraz)"
+contract.subjectEu: "Kontratuaren objetua (Euskeraz)"
+contract.amountWithVAT: "Zenbateko BEZa barne"
+contract.duration: "Iraupena"
+contract.durationType: "Iraupen unitatea"
+contract.identificationType: "Identifikazio mota"
+contract.idNumber: "Enpresaren IFK"
+contract.enterprise: "Enpresa"
+contract.awardDate: "Esleipen data"
+contract.user: "Erabiltzailea"
+
+# Search Forms messages
+searchForm.awardStartDate: "Esleipena noiztik"
+searchForm.awardEndDate: "Nora"
+
+# Successfull messages
+deleted: "Ezabatua"
+contract.deleted: "Kontratua behar bezala ezabatu da"
+contract.saved: "Kontratua behar bezala gorde da"
+
+# Error messages
+error.exceededMaxAmountForType: "Kontratu honetarako maximoa gainditu egin da: {maxAmount}"
+error.invalidCsrfToken: "CSRF tokena ez da zuzena"
+error.invalidAwardDate: "Esleipen da data ezin da gaurkoa baino handiagoa izan"
+error.cifNotValid: "{cif} IFK zenbakia ez da zuzena"
+error.nifNotValid: "{nif} IFZ-AIZ zenbakia ez da zuzena"
+error.duplicateCode: "Espediente zenbakia {code} jadanik sartuta dago. Ezin da berriz sartu."
+error.invalidDuration: "Iraupenak ez du 5 bost zenbaki baino gehiago izan."

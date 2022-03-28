@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contract;
 use App\Entity\IdentificationType;
+use App\Entity\User;
 use App\Form\ContractFormType;
 use App\Form\ContractSearchFormType;
 use App\Repository\ContractRepository;
@@ -14,8 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatableMessage;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ContractController extends AbstractController
@@ -34,7 +33,7 @@ class ContractController extends AbstractController
             /** @var Contract $data */
             $data = $form->getData();
             if ( !$this->checkForErrors($data, $repo) ) {
-                $data->setUser($request->getUser());
+                $data->setUser($this->getUser());
                 $em->persist($data);
                 $em->flush();
                 $this->addFlash('success', 'contract.saved');

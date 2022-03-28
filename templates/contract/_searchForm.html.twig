@@ -13,7 +13,7 @@
                {{ form_widget(form.endDate) }}
                {{ form_errors(form.endDate) }}
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-auto">
                <button class="btn btn-primary">{{ 'btn.search' | trans }}</button>
                <button class="btn btn-secondary" type="button" onclick="javascript:this.form.reset();">{{ 'btn.clean' | trans }}</button>
                <button class="btn btn-primary" data-action="submit-form#submit" data-url="{{ path('app_contract_download') }}" type="button">{{ 'btn.download' | trans }}</button>
