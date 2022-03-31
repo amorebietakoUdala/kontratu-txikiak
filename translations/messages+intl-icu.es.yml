@@ -17,6 +17,7 @@ messages.userSaved: "El usuario se ha guardado correctamente"
 user_saved: "El usuario se ha guardado correctamente"
 messages.userDeleted: "El usuario se ha eliminado correctamente"
 messages.existingUser: "El nombre de usuario o el email ya existe"
+messages.maxResultsReached: "Por defecto se muestran únicamente los últimos 50 registros"
 
 ROLE_USER: "Usuario"
 ROLE_ADMIN: "Administrador"
@@ -52,21 +53,21 @@ placeholder.choose: "Elije una opción"
 
 # Entities
 id: "Id"
-contract.code: "Nº de expdiente"
+contract.code: "Nº de expediente"
 contract.type: "Tipo"
 contract.subjectEs: "Objeto contrato (Castellano)"
 contract.subjectEu: "Objeto contrato (Euskera)"
 contract.amountWithVAT: "Importe con IVA"
 contract.duration: "Duración"
 contract.durationType: "Duración en"
-contract.identificationType: "Tipo de identificación"
+contract.identificationType: "Identificación"
 contract.idNumber: "CIF Empresa"
 contract.enterprise: "Empresa"
-contract.awardDate: "Fecha de adjudicación"
+contract.awardDate: "F. adjudicación"
 contract.user: "Usuario"
 
 # Search Forms messages
-searchForm.awardStartDate: "Creado desde"
+searchForm.awardStartDate: "Adjudicado desde"
 searchForm.awardEndDate: "Hasta"
 
 # Successfull messages

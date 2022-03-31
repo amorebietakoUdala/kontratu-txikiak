@@ -139,13 +139,14 @@ class ContractController extends AbstractController
      */
     public function index(Request $request, ContractRepository $repo): Response
     {
-        $contracts = $repo->findAll();
+        $contracts = $repo->findBy([],['createdAt'=>'DESC'],50);
+        if (count($contracts) && $request->getMethod() === Request::METHOD_GET) {
+            $this->addFlash('warning', 'messages.maxResultsReached');
+        }
         $form = $this->createForm(ContractSearchFormType::class, null, [
             'locale' => $request->getLocale(),
         ]);
-
         $form->handleRequest($request);
-
         if ( $form->isSubmitted() && $form->isValid() ) {
             /** @var array $data */
             $data = $form->getData();

@@ -75,7 +75,7 @@ class AppFixtures extends Fixture
 
         UserFactory::createMany(5);        
 
-        ContractFactory::createMany(10, function() {
+        ContractFactory::createMany(100, function() {
             return [
                 'type' => ContractTypeFactory::random(),
                 'durationType' => DurationTypeFactory::random(),

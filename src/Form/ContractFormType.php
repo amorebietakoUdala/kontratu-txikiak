@@ -26,9 +26,9 @@ class ContractFormType extends AbstractType
             ->add('code', null,[
                 'label' => 'contract.code',
                 'disabled' => $disabled,
-                'constraints' => [
-                    new IsValidExpCode(),
-                ]
+                // 'constraints' => [
+                //     new IsValidExpCode(),
+                // ]
             ])
             ->add('subjectEs', null, [
                 'label' => 'contract.subjectEs',
