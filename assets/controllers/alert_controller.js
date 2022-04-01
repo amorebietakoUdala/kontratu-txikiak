@@ -11,7 +11,6 @@ export default class extends Controller {
         event.preventDefault();
         let url = event.currentTarget.dataset.url;
         let token = event.currentTarget.dataset.token;
-        console.log(url, token, this.hasRedirectValue, this.redirectValue, token != null);
         import ('sweetalert2').then(async(Swal) => {
             Swal.default.fire({
                 template: '#confirmation',
@@ -26,6 +25,7 @@ export default class extends Controller {
                             });
                             console.log(`${url}?${urlParams.toString()}`);
                             document.location.href=`${url}?${urlParams.toString()}`;
+                            return;
                         }
                         document.location.href=url;
                     }
