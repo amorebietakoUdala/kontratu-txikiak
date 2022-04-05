@@ -21,7 +21,8 @@
                 {{ form_row(form.durationType) }}
             </div>
             <div class="col-lg-2" {{ stimulus_controller('datepicker', {
-                'selector': '.js-datepicker'
+                'selector': '.js-datepicker',
+                'locale': app.request.locale,
             })}}>
                 {{ form_row(form.awardDate) }}
             </div>
