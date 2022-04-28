@@ -77,7 +77,7 @@ class ContractController extends AbstractController
             /** @var Contract $data */
             $data = $form->getData();
             $contractWithSameCode = $repo->findByCode($data->getCode());
-            if ($data->getId() !== $contractWithSameCode->getId()) {
+            if (null !== $contractWithSameCode && $data->getId() !== $contractWithSameCode->getId()) {
                 $this->addFlash('error', new TranslatableMessage('error.duplicateCode',[
                     '{code}' => $contract->getCode(),
                 ]));
