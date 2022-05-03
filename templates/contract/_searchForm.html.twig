@@ -15,6 +15,11 @@
                {{ form_widget(form.endDate) }}
                {{ form_errors(form.endDate) }}
             </div>
+            <div class="col-lg-2">
+               {{ form_label(form.notified) }}
+               {{ form_widget(form.notified) }}
+               {{ form_errors(form.notified) }}
+            </div>
             <div class="col-lg-auto">
                <button class="btn btn-primary">{{ 'btn.search' | trans }}</button>
                <button class="btn btn-secondary" type="button" onclick="javascript:this.form.reset();">{{ 'btn.clean' | trans }}</button>

@@ -1,5 +1,6 @@
 message.confirmationTitle: "Confirme, por favor"
-message.confirmationText: "¿Está seguro de que desea eliminar el registro?"
+message.deletionConfirmationText: "¿Está seguro de que desea eliminar el registro?"
+message.sendConfirmationText: "¿Está seguro de que desea notificar el contrato menor al Gobierno Vasco?"
 message.error: "Error"
 btn.accept: "Aceptar"
 btn.ok: "Aceptar"

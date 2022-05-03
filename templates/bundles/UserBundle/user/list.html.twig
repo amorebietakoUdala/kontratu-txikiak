@@ -52,7 +52,7 @@
 										<i class="fa fa-edit"></i>
 									</a>
 									&nbsp;<a href="#" {{ stimulus_controller('alert', {
-                  				'confirmationText': 'message.confirmationText' | trans({},'alerts'),
+                  				'confirmationText': 'message.deletionConfirmationText' | trans({},'alerts'),
 			                  	'redirect' : true,
          				      	}) }} data-url="{{ path('admin_user_delete', {'id': user.id }) }}" data-token="{{ csrf_token('delete'~user.id ) }}" data-action="alert#confirm">
 										<i class="fa fa-trash"></i>

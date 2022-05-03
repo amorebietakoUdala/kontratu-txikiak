@@ -15,6 +15,7 @@ export default class extends Controller {
             Swal.default.fire({
                 template: '#confirmation',
                 html: this.confirmationTextValue,
+                allowOutsideClick: false,
             }).then((result) => {
                 if ( result.isConfirmed ) {
                     this.dispatch('confirmed');

@@ -1,0 +1,84 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:com="http://com.ejie.ac70a.webservice">
+   <soap:Header xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <wsse:Security soap:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+         <wsse:UsernameToken wsu:Id="unt_rPNdDVh2pDSU2VSt" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:Username>{{ params.wsseUser }}</wsse:Username>
+            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">{{ params.wssePassword }}</wsse:Password>
+         </wsse:UsernameToken>
+      </wsse:Security>
+   </soap:Header>
+<soapenv:Body>
+   <com:altaPeticionPublicacion>
+      <xml>
+         <![CDATA[<peticion_publicacion schemaVersion="2020.03.16" xmlns="com/ejie/ac70a/integracionkontratazioa">
+	<id_expediente_origen>{{ params.date | date('Ymd') }}{{ "%04d"|format(contract.id) }}</id_expediente_origen>
+	<origen>{{ params.origin }}</origen>
+	<ficha_expediente>
+		<tipo_anuncio>A</tipo_anuncio>
+		<objeto_contrato_es>{{contract.subjectEs|convert_encoding('ISO-8859-1', 'UTF-8')}}</objeto_contrato_es>
+		<objeto_contrato_eu>{{contract.subjectEu|convert_encoding('ISO-8859-1', 'UTF-8')}}</objeto_contrato_eu>
+		<codigo_expediente>{{contract.code}}</codigo_expediente>
+		<contrato_menor>TRUE</contrato_menor>
+		<estado_tramitacion>AD</estado_tramitacion>
+		<tramitacion>1</tramitacion>
+		<procedimiento>10</procedimiento>
+		<tipo_contrato>{{ contract.type }}</tipo_contrato>
+		<poder_adjudicador>{{ params.adjudicator }}</poder_adjudicador>
+		<entidad_impulsora>{{ params.entity }}</entidad_impulsora>
+		<organo_contratacion>{{ params.organ }}</organo_contratacion>
+		<tipo_poder>{{ params.powerType }}</tipo_poder>
+		<principal_actividad>{{ params.mainActivity }}</principal_actividad>
+		<lugar_ejecucion_principal_en_UE>TRUE</lugar_ejecucion_principal_en_UE>
+		<lugar_ejecucion_principal>
+			<lista_nuts>
+				<nuts>
+					<identificador_nuts>1</identificador_nuts>
+					<codigo_nuts>ES213</codigo_nuts>
+					<principal>TRUE</principal>
+				</nuts>
+			</lista_nuts>
+		</lugar_ejecucion_principal>
+		<tipo_duracion_contrato>{{ contract.durationType }}</tipo_duracion_contrato>
+		<cantidad_duracion_contrato>{{ contract.duration | number_format(0) }}</cantidad_duracion_contrato>
+		<numeros_licitadores_ofertas>
+			<num_licitadores_presentados>1</num_licitadores_presentados>
+		</numeros_licitadores_ofertas>
+		<empresas_licitadoras>
+			<empresa_licitadora>
+				<identificador_empresa_licitadora>1</identificador_empresa_licitadora>
+				<tipo_identificacion_empresa>{{ contract.identificationType }}</tipo_identificacion_empresa>
+				<identificacion_empresa>{{ contract.idNumber }}</identificacion_empresa>
+				<razon_social>{{ contract.enterprise }}</razon_social>
+			</empresa_licitadora>
+		</empresas_licitadoras>
+		<informes_adjudicacion>
+			<informe_adjudicacion>
+				<identificador_adjudicacion>1</identificador_adjudicacion>
+				<fecha_adjudicacion>{{ contract.awardDate | date('Y-m-d')}}</fecha_adjudicacion>
+				<tipo_plazo>{{ contract.durationType }}</tipo_plazo>
+				<duracion_plazo>{{ contract.duration | number_format(0) }}</duracion_plazo>
+				<empresa_adjudicacion>
+					<identificador_empresa_licitadora>1</identificador_empresa_licitadora>
+					<precio_sin_iva>{{ contract.amountWithoutVAT }}</precio_sin_iva>
+					<precio_con_iva>{{ contract.amountWithVAT }}</precio_con_iva>
+				</empresa_adjudicacion>
+				<lugar_ejecucion_principal_en_UE>TRUE</lugar_ejecucion_principal_en_UE>
+				<lugar_ejecucion_principal>
+					<lista_nuts>
+						<nuts>
+							<identificador_nuts>1</identificador_nuts>
+							<codigo_nuts>ES21</codigo_nuts>
+							<principal>TRUE</principal>
+						</nuts>
+					</lista_nuts>
+				</lugar_ejecucion_principal>
+			</informe_adjudicacion>
+		</informes_adjudicacion>
+		<publicar_perfil>TRUE</publicar_perfil>
+		<usuario>{{ params.soapUser }}</usuario>
+	</ficha_expediente>
+</peticion_publicacion>]]>
+      </xml>
+   </com:altaPeticionPublicacion>
+</soapenv:Body>
+</soapenv:Envelope>

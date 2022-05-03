@@ -1,0 +1,19 @@
+      <div
+         class="modal fade"
+         tabindex="-1"
+         aria-hidden="true"
+         data-bs-backdrop="static"
+         data-spinner-target="modal"
+      >
+         <div class="modal-dialog">
+            <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title">{{ 'title.sending' | trans }}</h5>
+                  </div>
+                  <div class="modal-body">
+                     <img src="{{ asset('build/images/spinner.gif') }}" height="50%">                  
+                     <div class="text-center">{{ 'messages.thisCanTakeSomeTime' | trans }}</div>
+                  </div>
+            </div>
+         </div>
+      </div>   

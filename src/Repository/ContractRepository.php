@@ -50,7 +50,7 @@ class ContractRepository extends ServiceEntityRepository
     /**
      * @return QueryBuilder Returns a QueryBuilder to find contracts with start and end dates
      */
-    public function findByAwardDateQB(?\DateTime $startDate = null, ?\DateTime $endDate = null) {
+    public function findByAwardDateAndNotifiedQB(?\DateTime $startDate = null, ?\DateTime $endDate = null, ?bool $notified = null) {
         $qb = $this->createQueryBuilder('c');
         if ( null !== $startDate ) {
             $qb->andWhere('c.awardDate >= :startDate')
@@ -60,6 +60,10 @@ class ContractRepository extends ServiceEntityRepository
             $qb->andWhere('c.awardDate < :endDate')
                 ->setParameter('endDate', $endDate->add(DateInterval::createFromDateString('1 day')));
         }
+        if (null !== $notified) {
+            $qb->andWhere('c.notified = :notified')
+                ->setParameter('notified', $notified);
+        }
         $qb->orderBy('c.awardDate', 'ASC');
         return $qb;
     }
@@ -67,8 +71,8 @@ class ContractRepository extends ServiceEntityRepository
     /**
      * @return Contract[] Returns an array of Contract objects
      */
-    public function findByAwardDate (?\DateTime $startDate = null, ?\DateTime $endDate = null) {
-        return $this->findByAwardDateQB($startDate, $endDate)->getQuery()->getResult();
+    public function findByAwardDateAndNotified (?\DateTime $startDate = null, ?\DateTime $endDate = null, ?bool $notified = null) {
+        return $this->findByAwardDateAndNotifiedQB($startDate, $endDate, $notified)->getQuery()->getResult();
     }
 
     /**

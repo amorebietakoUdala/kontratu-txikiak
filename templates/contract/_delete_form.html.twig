@@ -2,7 +2,7 @@
     <form class="form-inline" method="post" action="{{ path('app_contract_delete', {'id': contract.id}) }}" {{ stimulus_controller('submit-form') }} data-action="alert:confirmed->submit-form#submit" data-submit-form-target="form">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contract.id) }}">
         <button class="btn btn-danger" type="button" data-action="alert#confirm" {{ stimulus_controller('alert', {
-            'confirmationText' : 'message.confirmationText' | trans({},'alerts')
+            'confirmationText' : 'message.deletionConfirmationText' | trans({},'alerts')
         }) }}>{{'btn.delete' | trans}}</button>
     </form>
       {{ include('common/_alert.html.twig', {

@@ -14,7 +14,7 @@
             {% endif %}
             <th data-sortable="true">{{ 'contract.amountWithVAT' | trans }}</th>
             <th data-sortable="true">{{ 'contract.duration' | trans }}</th>
-            <th data-sortable="true">{{ 'contract.identificationType' | trans }}</th>
+            {# <th data-sortable="true">{{ 'contract.identificationType' | trans }}</th> #}
             <th data-sortable="true">{{ 'contract.idNumber' | trans }}</th>
             <th data-sortable="true">{{ 'contract.enterprise' | trans }}</th>
             <th data-sortable="true">{{ 'contract.awardDate' | trans }}</th>
@@ -34,7 +34,7 @@
             {% endif %}
             <td>{{ contract.amountWithVAT | number_format(2, ',', '.') }} €</td>
             <td>{{ contract.duration }} ({{ contract.durationType.name }})</td>
-            <td>{{ contract.identificationType.name }}</td>
+            {# <td>{{ contract.identificationType.name }}</td> #}
             <td>{{ contract.idNumber }}</td>
             <td>{{ contract.enterprise }}</td>
             <td>{{ contract.awardDate | date('Y-m-d')}}</td>
@@ -43,9 +43,15 @@
                <a href="{{ path('app_contract_show', {'id': contract.id }) }}"><i class="fa fa-eye" title='{{ "btn.show" | trans | capitalize }}'></i></a>&nbsp;
                <a href="{{ path('app_contract_edit', {'id': contract.id }) }}"><i class="fa fa-edit" title='{{ "btn.edit" | trans | capitalize }}'></i></a>&nbsp;
                <a href="#" {{ stimulus_controller('alert', {
-                  'confirmationText': 'message.confirmationText' | trans({},'alerts'),
+                  'confirmationText': 'message.deletionConfirmationText' | trans({},'alerts'),
                   'redirect' : true,
                }) }} data-url="{{ path('app_contract_delete', {'id': contract.id }) }}" data-token="{{ csrf_token('delete'~contract.id ) }}" data-action="alert#confirm"><i class="fa fa-trash" title='{{ "btn.delete" | trans | capitalize }}'></i></a>&nbsp;
+               {% if contract.notified == null or not contract.notified %}
+                  <a href="#" {{ stimulus_controller('alert', {
+                     'confirmationText': 'message.sendConfirmationText' | trans({},'alerts'),
+                     'redirect' : true,
+                  }) }} data-url="{{ path('app_contract_send', {'id': contract.id }) }}" data-token="{{ csrf_token('send'~contract.id ) }}" data-long="true" data-action="alert#confirm"><i class="fa fa-paper-plane" title='{{ "btn.send" | trans | capitalize }}'></i></a>&nbsp;
+               {% endif %}
             </td>
       </tr>
    {% endfor %}

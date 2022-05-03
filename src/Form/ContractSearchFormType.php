@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,6 +29,16 @@ class ContractSearchFormType extends AbstractType
                 'attr' => ['class' => 'js-datepicker'],
                 'label' => 'searchForm.awardEndDate',
                 'required' => false,
+            ])
+            ->add('notified', ChoiceType::class, [
+                'label' => 'searchForm.notified',
+                'required' => false,
+                'placeholder' => 'choice.all',
+                'empty_data' => null,
+                'choices' => [
+                    'choice.notified' => true,
+                    'choice.unnotified' => false,
+                ]
             ])
         ;
     }

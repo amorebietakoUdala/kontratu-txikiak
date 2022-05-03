@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Contract;
 use App\Entity\IdentificationType;
-use App\Entity\User;
 use App\Form\ContractFormType;
 use App\Form\ContractSearchFormType;
 use App\Repository\ContractRepository;
+use App\Service\ContractNotifierService;
 use App\Utils\Validaciones;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,10 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatableMessage;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ContractController extends AbstractController
 {
-
     /**
      * @Route("/{_locale}/contract/new", name="app_contract_new")
      */
@@ -55,11 +55,10 @@ class ContractController extends AbstractController
         $form = $this->createForm(ContractSearchFormType::class, null, [
             'locale' => $request->getLocale(),
         ]);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $contracts = $repo->findByAwardDate($data['startDate'], $data['endDate']);
+            $contracts = $repo->findByAwardDateAndNotified($data['startDate'], $data['endDate'], $data['notified']);
         }
         return $this->generateSpreadSheet($contracts);
     }
@@ -88,13 +87,12 @@ class ContractController extends AbstractController
                     'new' => false,
                 ]);
             }
-
+            $data->setNotified(false);
             $em->persist($data);
             $em->flush();
             $this->addFlash('success', 'contract.saved');
             return $this->redirectToRoute('app_contract_index');
         }
-
         return $this->renderForm('contract/edit.html.twig',[
             'contract' => $contract,
             'form' => $form,
@@ -106,7 +104,7 @@ class ContractController extends AbstractController
     /**
      * @Route("/{_locale}/contract/{id}", name="app_contract_show")
      */
-    public function show(Request $request, Contract $contract, EntityManagerInterface $em) {
+    public function show(Request $request, Contract $contract) {
         $form = $this->createForm(ContractFormType::class, $contract,[
             'locale' => $request->getLocale(),
             'disabled' => true,
@@ -118,6 +116,29 @@ class ContractController extends AbstractController
             'readonly' => true,
             'new' => false,
         ]);
+    }
+
+    /**
+     * @Route("/{_locale}/contract/{id}/send", name="app_contract_send")
+     */
+    public function send(Request $request, Contract $contract, EntityManagerInterface $em, ContractNotifierService $contractNotifierService) {
+        if ($this->isCsrfTokenValid('send'.$contract->getId(), $request->get('_token'))) {
+            try {
+                $response = $contractNotifierService->notify($contract);
+                if( $response['result'] === 'OK' ) {
+                    $contract->setNotified(true);
+                    $contract->setResponseId($response['id']);
+                    $em->persist($contract);
+                    $em->flush();
+                    $this->addFlash('success','messages.successfullyNotified');
+                } else {
+                    $this->addFlash('error', $response['error']);
+                }
+                return $this->redirectToRoute('app_contract_index');
+            } catch (HttpExceptionInterface $e) {
+                $this->addFlash('error',$e->getMessage());
+            }
+        }
     }
 
     /**
@@ -139,9 +160,11 @@ class ContractController extends AbstractController
      */
     public function index(Request $request, ContractRepository $repo): Response
     {
-        $contracts = $repo->findBy([],['createdAt'=>'DESC'],50);
-        if (count($contracts) && $request->getMethod() === Request::METHOD_GET) {
-            $this->addFlash('warning', 'messages.maxResultsReached');
+        if ($request->getMethod() === Request::METHOD_GET) {
+            $contracts = $repo->findBy([],['createdAt'=>'DESC'],50);
+            if (count($contracts) === 50) {
+                $this->addFlash('warning', 'messages.maxResultsReached');
+            }
         }
         $form = $this->createForm(ContractSearchFormType::class, null, [
             'locale' => $request->getLocale(),
@@ -150,7 +173,7 @@ class ContractController extends AbstractController
         if ( $form->isSubmitted() && $form->isValid() ) {
             /** @var array $data */
             $data = $form->getData();
-            $contracts = $repo->findByAwardDate($data['startDate'], $data['endDate']);
+            $contracts = $repo->findByAwardDateAndNotified($data['startDate'], $data['endDate'], $data['notified']);
         }
 
         return $this->renderForm('contract/index.html.twig', [
@@ -166,16 +189,6 @@ class ContractController extends AbstractController
         return $this->redirectToRoute('app_contract_index');
     }
 
-    private function removeBlankFilters($filter) {
-        $criteria = [];
-        foreach ( $filter as $key => $value ) {
-            if (null !== $value) {
-                $criteria[$key] = $value;
-            }
-        }
-        return $criteria;
-    }
-
     private function checkForErrors(Contract $contract, ContractRepository $repo) {
         if ( null !== $repo->findByCode($contract->getCode()) ) {
             $this->addFlash('error', new TranslatableMessage('error.duplicateCode',[
@@ -187,7 +200,11 @@ class ContractController extends AbstractController
             $this->addFlash('error', 'error.invalidDuration');
             return true;
         }
-        if ( null !== $contract->getType()->getMaxAmount() && $contract->getAmountWithVAT() > $contract->getType()->getMaxAmount() ) {
+        if ( null !== $contract->getAmountWithoutVAT() && null !== $contract->getAmountWithVAT() && $contract->getAmountWithoutVAT() > $contract->getAmountWithVAT() ) {
+            $this->addFlash('error', new TranslatableMessage('error.amountWithoutVATGreatherThanamountWithVAT'));
+            return true;
+        }
+        if ( null !== $contract->getType()->getMaxAmount() && $contract->getAmountWithoutVAT() > $contract->getType()->getMaxAmount() ) {
             $this->addFlash('error', new TranslatableMessage('error.exceededMaxAmountForType', [
                 '{maxAmount}' => $contract->getType()->getMaxAmount(),
             ]));

@@ -43,11 +43,13 @@ final class ContractFactory extends ModelFactory
             'code' => 'AYT/'.self::faker()->numberBetween(1,200).'/'.self::faker()->numberBetween(2021,2022),
             'subjectEs' => self::faker()->text(),
             'subjectEu' => self::faker()->text(),
+            'amountWithoutVAT' => self::faker()->randomFloat(2, 1000, 100000),
             'amountWithVAT' => self::faker()->randomFloat(2, 1000, 100000),
             'duration' => self::faker()->randomFloat(2, 1, 720),
             'idNumber' => self::faker()->word(),
             'enterprise' => self::faker()->text(),
             'awardDate' => self::faker()->datetime(),
+            'notified' => self::faker()->boolean(0.5),
         ];
     }
 

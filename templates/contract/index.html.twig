@@ -4,7 +4,7 @@
 
 {% block body %}
    <h1 class="h2">{{'title.contracts' | trans }}</h1>
-   <div class="container-fluid">
+   <div class="container-fluid" {{ stimulus_controller('spinner') }} data-action="alert:confirmed->spinner#showSpinner">
       {{ include('contract/_searchForm.html.twig') }}
       <div data-reload-content-target="content">
          {{ include('contract/_list.html.twig') }}
@@ -13,5 +13,6 @@
       {{ include('common/_alert.html.twig', {
          'confirmationText' : 'messages.confirmationDetail' | trans 
       }) }}
+      {{ include('common/_spinnerModal.html.twig')}}
    </div>
 {% endblock %}

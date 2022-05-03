@@ -11,6 +11,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  */
 class Contract
 {
+    public function __construct()
+    {
+        $this->notified = false;
+    }
 
     use TimestampableEntity;
 
@@ -83,6 +87,21 @@ class Contract
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="contracts")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $notified;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $responseId;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $amountWithoutVAT;
 
     public function getId(): ?int
     {
@@ -230,6 +249,42 @@ class Contract
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getNotified(): ?bool
+    {
+        return $this->notified;
+    }
+
+    public function setNotified(?bool $notified): self
+    {
+        $this->notified = $notified;
+
+        return $this;
+    }
+
+    public function getResponseId(): ?string
+    {
+        return $this->responseId;
+    }
+
+    public function setResponseId(?string $responseId): self
+    {
+        $this->responseId = $responseId;
+
+        return $this;
+    }
+
+    public function getAmountWithoutVAT(): ?string
+    {
+        return $this->amountWithoutVAT;
+    }
+
+    public function setAmountWithoutVAT(?string $amountWithoutVAT): self
+    {
+        $this->amountWithoutVAT = $amountWithoutVAT;
 
         return $this;
     }

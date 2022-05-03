@@ -38,12 +38,19 @@ class ContractFormType extends AbstractType
                 'label' => 'contract.subjectEu',
                 'disabled' => $disabled,
             ])
+            ->add('amountWithoutVAT', NumberType::class,[
+                'label' => 'contract.amountWithoutVAT',
+                'disabled' => $disabled,
+                'constraints' => [
+                    new Positive(),
+                    new LessThanOrEqual('39999.99'),
+                ]
+            ])
             ->add('amountWithVAT', NumberType::class,[
                 'label' => 'contract.amountWithVAT',
                 'disabled' => $disabled,
                 'constraints' => [
                     new Positive(),
-                    new LessThanOrEqual('48400'),
                 ]
             ])
             ->add('duration', NumberType::class,[
