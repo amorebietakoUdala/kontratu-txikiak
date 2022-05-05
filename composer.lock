@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5126c7e33cd50ec554b1f6ab262043e9",
+    "content-hash": "64ace9ca94466feae971ab6010c5d0df",
     "packages": [
         {
             "name": "amorebietakoudala/user-bundle",
-            "version": "1.2.3",
+            "version": "1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amorebietakoUdala/user-bundle.git",
-                "reference": "1cd74b940fb3f558137f7cf7cc68d6e1a76667f7"
+                "reference": "5add071641996e288e37a0860b364eca883a6640"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amorebietakoUdala/user-bundle/zipball/1cd74b940fb3f558137f7cf7cc68d6e1a76667f7",
-                "reference": "1cd74b940fb3f558137f7cf7cc68d6e1a76667f7",
+                "url": "https://api.github.com/repos/amorebietakoUdala/user-bundle/zipball/5add071641996e288e37a0860b364eca883a6640",
+                "reference": "5add071641996e288e37a0860b364eca883a6640",
                 "shasum": ""
             },
             "require": {
@@ -49,9 +49,9 @@
             "description": "AmorebietakoUdala erabiltzaile bundlela",
             "support": {
                 "issues": "https://github.com/amorebietakoUdala/user-bundle/issues",
-                "source": "https://github.com/amorebietakoUdala/user-bundle/tree/1.2.3"
+                "source": "https://github.com/amorebietakoUdala/user-bundle/tree/1.3"
             },
-            "time": "2022-03-08T10:49:38+00:00"
+            "time": "2022-05-05T08:38:05+00:00"
         },
         {
             "name": "behat/transliterator",

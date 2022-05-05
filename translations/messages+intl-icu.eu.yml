@@ -94,3 +94,4 @@ error.duplicateCode: "Espediente zenbakia {code} jadanik sartuta dago. Ezin da b
 error.invalidDuration: "Iraupenak ez du 5 bost zenbaki baino gehiago izan."
 error.nullContract: "Ez da kontraturik hautatu."
 error.amountWithoutVATGreatherThanamountWithVAT: "Zenbatekoa BEZa barne ezin da BEZa barik baino handiago izan."
+error.noUserIdNumber: "Erabiltzaileak ez dauka NAN zenbakia ezarrita. Eusko Jaurlaritzara jakinarazpenak egiteko beharrezkoa da NAN zenbakia"

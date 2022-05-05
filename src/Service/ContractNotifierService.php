@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Contract;
+use App\Entity\User;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +23,10 @@ class ContractNotifierService
     private $organ;
     private $powerType;
     private $mainActivity;
-    private $soapUser;
     private $wsseUser;
     private $wssePassword;
 
-    public function __construct(HttpClientInterface $client, Environment $twig, $url, $origin, $adjudicator, $entity, $organ, $powerType, $mainActivity, $soapUser, $wsseUser, $wssePassword) {
+    public function __construct(HttpClientInterface $client, Environment $twig, $url, $origin, $adjudicator, $entity, $organ, $powerType, $mainActivity, $wsseUser, $wssePassword) {
         $this->client = $client;
         $this->twig = $twig;
         $this->url = $url;
@@ -36,7 +36,6 @@ class ContractNotifierService
         $this->organ = $organ;
         $this->powerType = $powerType;
         $this->mainActivity = $mainActivity;
-        $this->soapUser = $soapUser;
         $this->wsseUser = $wsseUser;
         $this->wssePassword = $wssePassword;
     }
@@ -48,7 +47,7 @@ class ContractNotifierService
    * 
    * @return array<int,string>
    */
-   public function notify(Contract $contract) {
+   public function notify(Contract $contract, User $user) {
       $result = [];
       if (null === $contract) {
          return $errors[] = "error.nullContract";
@@ -61,7 +60,7 @@ class ContractNotifierService
                   'SOAPAction' => '""',
                   'Connection' => 'Keep-Alive',
              ],
-             'body' => $this->createBody($contract),
+             'body' => $this->createBody($contract, $user),
          ]);
          $statusCode = $response->getStatusCode(false);
          $responseContent = $response->getContent(false);
@@ -115,7 +114,7 @@ XML;
    * 
    * @return string
    */
-  private function createBody(Contract $contract) {
+  private function createBody(Contract $contract, User $user) {
       $soapParams = [
          'date' => new \DateTime(),
          'origin' => $this->origin,
@@ -124,7 +123,7 @@ XML;
          'organ' => $this->organ,
          'powerType' => $this->powerType,
          'mainActivity' => $this->mainActivity,
-         'soapUser' => $this->soapUser,
+         'soapUser' => $user->getIdNumber(),
          'wsseUser' => $this->wsseUser,
          'wssePassword' => $this->wssePassword,
       ];

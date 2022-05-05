@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contract;
 use App\Entity\IdentificationType;
+use App\Entity\User;
 use App\Form\ContractFormType;
 use App\Form\ContractSearchFormType;
 use App\Repository\ContractRepository;
@@ -122,9 +123,15 @@ class ContractController extends AbstractController
      * @Route("/{_locale}/contract/{id}/send", name="app_contract_send")
      */
     public function send(Request $request, Contract $contract, EntityManagerInterface $em, ContractNotifierService $contractNotifierService) {
+        /** @var User $user  */
+        $user = $this->getUser();
+        if ( null === $user->getIdNumber() ) {
+            $this->addFlash('error', 'error.noUserIdNumber');
+            return $this->redirectToRoute('app_contract_index');
+        }        
         if ($this->isCsrfTokenValid('send'.$contract->getId(), $request->get('_token'))) {
             try {
-                $response = $contractNotifierService->notify($contract);
+                $response = $contractNotifierService->notify($contract, $user);
                 if( $response['result'] === 'OK' ) {
                     $contract->setNotified(true);
                     $contract->setResponseId($response['id']);

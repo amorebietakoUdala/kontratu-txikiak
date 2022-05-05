@@ -57,6 +57,11 @@ class User extends BaseUser /* implements AMREUserInterface, PasswordAuthenticat
     protected $lastLogin;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $idNumber;
+
+    /**
      * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="user")
      */
     private $contracts;
