@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('app_contract_index') }}" {{ stimulus_controller('submit-form') }} data-submit-form-target="form">
+<form method="post" {{ stimulus_controller('submit-form') }} data-submit-form-target="form">
    <div class="container-fluid">
       <div class="row align-items-center" {{ stimulus_controller('datepicker', {
                'selector': '.js-datepicker',
@@ -21,7 +21,7 @@
                {{ form_errors(form.notified) }}
             </div>
             <div class="col-lg-auto">
-               <button class="btn btn-primary">{{ 'btn.search' | trans }}</button>
+               <button class="btn btn-primary" data-action="submit-form#submit" data-url="{{ path('app_contract_index') }}">{{ 'btn.search' | trans }}</button>
                <button class="btn btn-secondary" type="button" onclick="javascript:this.form.reset();">{{ 'btn.clean' | trans }}</button>
                <button class="btn btn-success" data-action="submit-form#submit" data-url="{{ path('app_contract_download') }}" type="button">{{ 'btn.download' | trans }}</button>
             </div>
