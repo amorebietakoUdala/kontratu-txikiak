@@ -272,7 +272,7 @@ class ContractController extends AbstractController
         $sheet->setCellValue((++$startColumn).$startRow, $contract->getSubjectEs());
         $sheet->setCellValue((++$startColumn).$startRow, $contract->getSubjectEu());
         $sheet->setCellValue((++$startColumn).$startRow, '');
-        $sheet->setCellValue((++$startColumn).$startRow, '');
+        $sheet->setCellValue((++$startColumn).$startRow, $contract->getAmountWithoutVAT());
         $sheet->setCellValue((++$startColumn).$startRow, $contract->getAmountWithVAT());
         $sheet->setCellValue((++$startColumn).$startRow, '');
         $sheet->setCellValue((++$startColumn).$startRow, $contract->getDurationType());
