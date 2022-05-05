@@ -48,7 +48,7 @@
 				<identificador_empresa_licitadora>1</identificador_empresa_licitadora>
 				<tipo_identificacion_empresa>{{ contract.identificationType }}</tipo_identificacion_empresa>
 				<identificacion_empresa>{{ contract.idNumber }}</identificacion_empresa>
-				<razon_social>{{ contract.enterprise }}</razon_social>
+				<razon_social>{{ contract.enterprise | convert_encoding('ISO-8859-1', 'UTF-8') }}</razon_social>
 			</empresa_licitadora>
 		</empresas_licitadoras>
 		<informes_adjudicacion>

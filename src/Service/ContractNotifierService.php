@@ -64,38 +64,6 @@ class ContractNotifierService
          ]);
          $statusCode = $response->getStatusCode(false);
          $responseContent = $response->getContent(false);
-/*
-         $statusCode = 200;
-         $responseContent = <<<XML
-            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-               <soapenv:Header/>
-               <S:Body xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-                  <ns2:altaPeticionPublicacionResponse xmlns:ns2="http://com.ejie.ac70a.webservice">
-                     <return><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
-            <peticion_publicacion_resultado xmlns="com/ejie/ac70a/integracionkontratazioa">
-               <id_peticion_perfil>406927</id_peticion_perfil>
-               <codigo_error>00000</codigo_error>
-            </peticion_publicacion_resultado>]]></return>
-                  </ns2:altaPeticionPublicacionResponse>
-               </S:Body>
-            </soapenv:Envelope>
-         XML;
-
-         $responseContent = <<<XML
-         <?xml version="1.0" encoding="UTF-8"?>
-         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><S:Body xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><ns2:altaPeticionPublicacionResponse xmlns:ns2="http://com.ejie.ac70a.webservice"><return><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
-         <peticion_publicacion_resultado xmlns="com/ejie/ac70a/integracionkontratazioa">
-            <codigo_error>00102</codigo_error>
-            <descripcion_error>
-               <mensaje_principal>Error al realizar la validacion del xml: error de negocio</mensaje_principal>
-               <lista_errores>
-                  <error>El Expediente ya está utilizado en otro expediente con el mismo Poder adjudicador y la misma Entidad impulsora </error>
-               </lista_errores>
-            </descripcion_error>
-         </peticion_publicacion_resultado>
-         ]]></return></ns2:altaPeticionPublicacionResponse></S:Body></soapenv:Envelope>
-XML;
-*/
          if ($statusCode === Response::HTTP_OK) {
             $result = $this->proccessResponse($responseContent);
             return $result;
@@ -130,7 +98,7 @@ XML;
       $body = $this->twig->render('contract/_newContract.xml.twig', [
          'contract' => $contract,
          'params' => $soapParams,
-      ]); 
+      ]);
       return $body;
    }
 
@@ -144,7 +112,7 @@ XML;
    private function proccessResponse($responseContent) {
       $response = [];
       $crawler = new Crawler($responseContent);
-      $crawler = new Crawler($crawler->filterXPath('.//return')->innerText());
+      $crawler = new Crawler( mb_convert_encoding($crawler->filterXPath('.//return')->innerText(),'ISO-8859-1','UTF-8') );
       $codigoError = $crawler->filterXPath('.//codigo_error')->count() > 0 ? $crawler->filterXPath('.//codigo_error')->text() : null;
       $mensajeError = $crawler->filterXPath('.//descripcion_error')->count() > 0 ? $crawler->filterXPath('.//descripcion_error')->text() : null;
       if ($codigoError === self::RESPONSE_OK) {
