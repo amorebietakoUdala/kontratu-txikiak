@@ -37,7 +37,11 @@ export default class extends Controller {
                 });
             });
         });
+        $table.on('page-change.bs.table',function(e) {
+            console.log(e);
+            $('.page-list').find('button').attr('data-bs-toggle','dropdown');
+        }); 
         let $div = $('div.bootstrap-table.bootstrap4').removeClass('bootstrap4').addClass('bootstrap5');
+        $('.page-list').find('button').attr('data-bs-toggle','dropdown');
     }
-  
 }
