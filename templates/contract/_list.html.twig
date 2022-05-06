@@ -43,10 +43,12 @@
             <td>
                <a href="{{ path('app_contract_show', {'id': contract.id }) }}"><i class="fa fa-eye" title='{{ "btn.show" | trans | capitalize }}'></i></a>&nbsp;
                <a href="{{ path('app_contract_edit', {'id': contract.id }) }}"><i class="fa fa-edit" title='{{ "btn.edit" | trans | capitalize }}'></i></a>&nbsp;
+               {% if is_granted('ROLE_ADMIN') %}
                <a href="#" {{ stimulus_controller('alert', {
                   'confirmationText': 'message.deletionConfirmationText' | trans({},'alerts'),
                   'redirect' : true,
                }) }} data-url="{{ path('app_contract_delete', {'id': contract.id }) }}" data-token="{{ csrf_token('delete'~contract.id ) }}" data-action="alert#confirm"><i class="fa fa-trash" title='{{ "btn.delete" | trans | capitalize }}'></i></a>&nbsp;
+               {% endif %}
                {% if contract.notified == null or not contract.notified %}
                   <a href="#" {{ stimulus_controller('alert', {
                      'confirmationText': 'message.sendConfirmationText' | trans({},'alerts'),
