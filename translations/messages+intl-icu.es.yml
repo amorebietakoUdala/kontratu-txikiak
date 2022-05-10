@@ -25,7 +25,7 @@ ROLE_USER: "Usuario"
 ROLE_ADMIN: "Administrador"
 
 # Menu
-navitem.contracts: "Contractos"
+navitem.contracts: "Contratos"
 navitem.administration: "Administración"
 navitem.users: "Usuarios"
 link.logout: "Salir"
