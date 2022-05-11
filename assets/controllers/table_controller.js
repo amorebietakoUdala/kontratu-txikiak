@@ -44,3 +44,4 @@ export default class extends Controller {
         $('.page-list').find('button').attr('data-bs-toggle','dropdown');
     }
 }
+     
