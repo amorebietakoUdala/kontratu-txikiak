@@ -33,7 +33,7 @@
             {% else %}
                <td>{{contract.subjectEu}}</td>
             {% endif %}
-            <td>{{ contract.amountWithVAT | number_format(2,'.',',')}} €</td>
+            <td>{{ contract.amountWithVAT | number_format(2,',','.,')}} €</td>
             <td>{{ contract.duration }} ({{ contract.durationType.name }})</td>
             {# <td>{{ contract.identificationType.name }}</td> #}
             <td>{{ contract.idNumber }}</td>
