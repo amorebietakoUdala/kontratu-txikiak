@@ -8,6 +8,7 @@ use App\Entity\DurationType;
 use App\Entity\IdentificationType;
 use App\Validator\IsValidDNI;
 use App\Validator\IsValidExpCode;
+use App\Validator\NotAllUpperCase;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -33,10 +34,15 @@ class ContractFormType extends AbstractType
             ->add('subjectEs', null, [
                 'label' => 'contract.subjectEs',
                 'disabled' => $disabled,
+                'constraints' => [
+                    new NotAllUpperCase(),
+                ]
             ])
             ->add('subjectEu', null,[
                 'label' => 'contract.subjectEu',
                 'disabled' => $disabled,
+                'constraints' => [
+                    new NotAllUpperCase(),                ]
             ])
             ->add('amountWithoutVAT', NumberType::class,[
                 'label' => 'contract.amountWithoutVAT',

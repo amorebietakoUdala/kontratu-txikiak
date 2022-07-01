@@ -1,3 +1,4 @@
 validation.invalidDNI: "El DNI/NIE no es correcto"
 iban.invalid: 'El IBAN no es válido'
 validation.invalidExpCode: "El código de expediente es inválido"
+validation.notAllUppercase: "No ponga todo en mayúsculas. Escriba mayúsculas según ortografía"

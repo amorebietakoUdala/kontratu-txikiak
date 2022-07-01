@@ -1,2 +1,4 @@
 validation.invalidDNI: "ANA/NAN ez da zuzena"
 iban.invalid: 'IBAN zenbakia ez da zuzena'
+validation.invalidExpCode: "Espediente zenbakia ez da zuzena"
+validation.notAllUppercase: "Ez jarri dena maiuskulaz. Erabili maiuskulak ortografiaren arabera"
