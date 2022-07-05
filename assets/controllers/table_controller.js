@@ -7,6 +7,7 @@ export default class extends Controller {
    static values = {
        exportName: String,
        pageSize: Number,
+       page: Number
    }
 
     connect() {
@@ -42,6 +43,26 @@ export default class extends Controller {
         }); 
         let $div = $('div.bootstrap-table.bootstrap4').removeClass('bootstrap4').addClass('bootstrap5');
         $('.page-list').find('button').attr('data-bs-toggle','dropdown');
+        if ( this.pageValue !== null && $table.bootstrapTable("getOptions").totalPages >= this.pageValue ) {
+            $table.bootstrapTable('selectPage', this.pageValue);
+        }
+    }
+
+    updatePageParams(event) {
+        event.preventDefault();
+        const destination = event.currentTarget.parentElement.href;
+        const url = event.currentTarget.parentElement.dataset.url;
+        const page = $(this.element).bootstrapTable('getOptions').pageNumber != null ? $(this.element).bootstrapTable('getOptions').pageNumber : 1;
+        const pageSize = $(this.element).bootstrapTable('getOptions').pageSize != null ? $(this.element).bootstrapTable('getOptions').pageSize : 10;
+        const params = new URLSearchParams({
+            page: page,
+            pageSize: pageSize,
+          });
+        const returnUrl = url + '?' + params.toString();
+        const params2 = new URLSearchParams({
+            returnUrl: returnUrl,
+          });
+        document.location.href= destination + '?' + params2.toString(); 
     }
 }
      

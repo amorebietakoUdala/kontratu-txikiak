@@ -56,7 +56,8 @@
                 {% if not readonly %}
                     <button class="btn btn-primary">{{ 'btn.save' | trans }}</button>
                 {% endif %}
-                <button class="btn btn-secondary js-back" data-url="{{ path('app_contract_index') }}">{{ 'btn.cancel' | trans }}</button>
+                {% set returnUrl = app.request.query.get('returnUrl') %}                
+                <button class="btn btn-secondary js-back" data-url="{{ returnUrl }}">{{ 'btn.cancel' | trans }}</button>
             </div>
         </div>
     </div>

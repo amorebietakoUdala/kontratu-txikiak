@@ -20,7 +20,6 @@ export default class extends Controller {
          weekStart: 1,
          startView: this.startViewValue,
      }
-     console.log(this.localeValue);
       $(this.selectorValue).datepicker(options);
       let placeholder = this.localeValue === 'es' ? "AAAA-MM-DD" : "UUUU-HH-EE";
       $(this.selectorValue).attr("placeholder",placeholder);

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Contract;
+use App\Entity\User;
 use DateInterval;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -50,7 +51,7 @@ class ContractRepository extends ServiceEntityRepository
     /**
      * @return QueryBuilder Returns a QueryBuilder to find contracts with start and end dates
      */
-    public function findByAwardDateAndNotifiedQB(?\DateTime $startDate = null, ?\DateTime $endDate = null, ?bool $notified = null) {
+    public function findByAwardDateAndNotifiedQB(?\DateTime $startDate = null, ?\DateTime $endDate = null, ?bool $notified = null, ?User $user = null) {
         $qb = $this->createQueryBuilder('c');
         if ( null !== $startDate ) {
             $qb->andWhere('c.awardDate >= :startDate')
@@ -64,6 +65,10 @@ class ContractRepository extends ServiceEntityRepository
             $qb->andWhere('c.notified = :notified')
                 ->setParameter('notified', $notified);
         }
+        if (null !== $user) {
+            $qb->andWhere('c.user = :user')
+                ->setParameter('user', $user);
+        }
         $qb->orderBy('c.awardDate', 'ASC');
         return $qb;
     }
@@ -71,8 +76,8 @@ class ContractRepository extends ServiceEntityRepository
     /**
      * @return Contract[] Returns an array of Contract objects
      */
-    public function findByAwardDateAndNotified (?\DateTime $startDate = null, ?\DateTime $endDate = null, ?bool $notified = null) {
-        return $this->findByAwardDateAndNotifiedQB($startDate, $endDate, $notified)->getQuery()->getResult();
+    public function findByAwardDateAndNotified (?\DateTime $startDate = null, ?\DateTime $endDate = null, ?bool $notified = null, ?User $user = null) {
+        return $this->findByAwardDateAndNotifiedQB($startDate, $endDate, $notified, $user)->getQuery()->getResult();
     }
 
     /**

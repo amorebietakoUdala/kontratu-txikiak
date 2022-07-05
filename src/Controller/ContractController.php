@@ -152,6 +152,8 @@ class ContractController extends AbstractController
      * @Route("/{_locale}/contract/{id}/delete", name="app_contract_delete")
      */
     public function delete(Request $request, Contract $contract, EntityManagerInterface $em) {
+        $page = $request->get('page') ? $request->get('page') : 1;
+        $pageSize = $request->get('pageSize') ? $request->get('pageSize') : 1;
         if ($this->isCsrfTokenValid('delete'.$contract->getId(), $request->get('_token'))) {
             $em->remove($contract);
             $em->flush();
@@ -159,7 +161,10 @@ class ContractController extends AbstractController
         } else {
             $this->addFlash('error','error.invalidCsrfToken');
         }       
-        return $this->redirectToRoute('app_contract_index');
+        return $this->redirectToRoute('app_contract_index', [
+            'page' => $page,
+            'pageSize' => $pageSize,
+        ]);
     }
 
     /**
@@ -167,12 +172,15 @@ class ContractController extends AbstractController
      */
     public function index(Request $request, ContractRepository $repo): Response
     {
+        $page = $request->query->get('page') ?  $request->query->get('page') : 1;
+        $pageSize = $request->query->get('pageSize') ?  $request->query->get('pageSize') : 10;
         if ($request->getMethod() === Request::METHOD_GET) {
             $contracts = $repo->findBy([],['createdAt'=>'DESC'],50);
             if (count($contracts) === 50) {
                 $this->addFlash('warning', 'messages.maxResultsReached');
             }
         }
+
         $form = $this->createForm(ContractSearchFormType::class, null, [
             'locale' => $request->getLocale(),
         ]);
@@ -180,12 +188,14 @@ class ContractController extends AbstractController
         if ( $form->isSubmitted() && $form->isValid() ) {
             /** @var array $data */
             $data = $form->getData();
-            $contracts = $repo->findByAwardDateAndNotified($data['startDate'], $data['endDate'], $data['notified']);
+            $contracts = $repo->findByAwardDateAndNotified($data['startDate'], $data['endDate'], $data['notified'], $data['user']);
         }
 
         return $this->renderForm('contract/index.html.twig', [
             'contracts' => $contracts,
             'form' => $form,
+            'page' => $page,
+            'pageSize' => $pageSize,
         ]);
     }
 
