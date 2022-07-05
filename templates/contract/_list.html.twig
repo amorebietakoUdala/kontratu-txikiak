@@ -2,7 +2,8 @@
 
 <table class="table" {{ stimulus_controller('table', {
    'exportName': 'contracts',
-   'pageSize' : 10,
+   'pageSize' : pageSize != null ? pageSize : 10,
+   'page': page != null ? page : 1,
 }) }}>
    <thead>
       <tr>
@@ -13,7 +14,7 @@
             {% else %}
                <th data-sortable="true">{{"contract.subjectEu" | trans }}</th>
             {% endif %}
-            <th data-sortable="true" data-sorter="amountSorter">{{ 'contract.amountWithVAT' | trans }} (€)</th>
+            <th data-sortable="true" data-sorter="amountSorter">{{ 'contract.amountWithVAT' | trans }}</th>
             <th data-sortable="true">{{ 'contract.duration' | trans }}</th>
             {# <th data-sortable="true">{{ 'contract.identificationType' | trans }}</th> #}
             <th data-sortable="true">{{ 'contract.idNumber' | trans }}</th>
@@ -41,8 +42,12 @@
             <td>{{ contract.awardDate | date('Y-m-d')}}</td>
             <td>{{ contract.user }}</td>
             <td>
-               <a href="{{ path('app_contract_show', {'id': contract.id }) }}"><i class="fa fa-eye" title='{{ "btn.show" | trans | capitalize }}'></i></a>&nbsp;
-               <a href="{{ path('app_contract_edit', {'id': contract.id }) }}"><i class="fa fa-edit" title='{{ "btn.edit" | trans | capitalize }}'></i></a>&nbsp;
+               <a href="{{ path('app_contract_show', {
+                     'id': contract.id }
+                  ) }}" data-url="{{ absolute_url(path(app.request.attributes.get('_route'))) }}"><i class="fa fa-eye" title='{{ "btn.show" | trans | capitalize }}' data-action="click->table#updatePageParams"></i></a>&nbsp;
+               <a href="{{ path('app_contract_show', {
+                     'id': contract.id }
+                  ) }}" data-url="{{ absolute_url(path(app.request.attributes.get('_route'))) }}"><i class="fa fa-edit" title='{{ "btn.edit" | trans | capitalize }}' data-action="click->table#updatePageParams"></i></a>&nbsp;
                {% if is_granted('ROLE_ADMIN') %}
                <a href="#" {{ stimulus_controller('alert', {
                   'confirmationText': 'message.deletionConfirmationText' | trans({},'alerts'),

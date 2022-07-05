@@ -1,4 +1,6 @@
-<form method="post" {{ stimulus_controller('submit-form') }} data-submit-form-target="form">
+<form method="post" {{ stimulus_controller('contract-search-form', {
+   'locale': app.request.locale,
+}) }} data-contract-search-form-target="form">
    <div class="container-fluid">
       <div class="row align-items-center" {{ stimulus_controller('datepicker', {
                'selector': '.js-datepicker',
@@ -20,10 +22,15 @@
                {{ form_widget(form.notified) }}
                {{ form_errors(form.notified) }}
             </div>
+            <div class="col-lg-2">
+               {{ form_label(form.user) }}
+               {{ form_widget(form.user, { 'attr': { 'data-contract-search-form-target': 'userSelect' }} ) }}
+               {{ form_errors(form.user) }}
+            </div>
             <div class="col-lg-auto">
-               <button class="btn btn-primary" data-action="submit-form#submit" data-url="{{ path('app_contract_index') }}">{{ 'btn.search' | trans }}</button>
+               <button class="btn btn-primary" data-action="contract-search-form#submit" data-url="{{ path('app_contract_index') }}">{{ 'btn.search' | trans }}</button>
                <button class="btn btn-secondary" type="button" onclick="javascript:this.form.reset();">{{ 'btn.clean' | trans }}</button>
-               <button class="btn btn-success" data-action="submit-form#submit" data-url="{{ path('app_contract_download') }}" type="button">{{ 'btn.download' | trans }}</button>
+               <button class="btn btn-success" data-action="contract-search-form#submit" data-url="{{ path('app_contract_download') }}" type="button">{{ 'btn.download' | trans }}</button>
             </div>
       </div>
    </div>
