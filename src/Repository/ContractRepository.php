@@ -69,7 +69,7 @@ class ContractRepository extends ServiceEntityRepository
             $qb->andWhere('c.user = :user')
                 ->setParameter('user', $user);
         }
-        $qb->orderBy('c.awardDate', 'ASC');
+        $qb->orderBy('c.awardDate', 'DESC');
         return $qb;
     }
 
