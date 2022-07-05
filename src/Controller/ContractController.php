@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\ContractFormType;
 use App\Form\ContractSearchFormType;
 use App\Repository\ContractRepository;
+use App\Repository\UserRepository;
 use App\Service\ContractNotifierService;
 use App\Utils\Validaciones;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +22,13 @@ use \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ContractController extends AbstractController
 {
+
+    private UserRepository $userRepo;
+    public function __construct(UserRepository $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
+
     /**
      * @Route("/{_locale}/contract/new", name="app_contract_new")
      */
@@ -174,14 +182,20 @@ class ContractController extends AbstractController
     {
         $page = $request->query->get('page') ?  $request->query->get('page') : 1;
         $pageSize = $request->query->get('pageSize') ?  $request->query->get('pageSize') : 10;
+        $data = [];
         if ($request->getMethod() === Request::METHOD_GET) {
-            $contracts = $repo->findBy([],['createdAt'=>'DESC'],50);
+            if ($request->getSession()->get('contracts') === null) {
+                $contracts = $repo->findBy([],['createdAt'=>'DESC'],50);
+            } else {
+                $contracts = $request->getSession()->get('contracts');
+                $data = $request->getSession()->get('data');
+                $data['user'] = $this->userRepo->find($data['user']);
+            }
             if (count($contracts) === 50) {
                 $this->addFlash('warning', 'messages.maxResultsReached');
             }
         }
-
-        $form = $this->createForm(ContractSearchFormType::class, null, [
+        $form = $this->createForm(ContractSearchFormType::class, $data, [
             'locale' => $request->getLocale(),
         ]);
         $form->handleRequest($request);
@@ -189,6 +203,8 @@ class ContractController extends AbstractController
             /** @var array $data */
             $data = $form->getData();
             $contracts = $repo->findByAwardDateAndNotified($data['startDate'], $data['endDate'], $data['notified'], $data['user']);
+            $request->getSession()->set('contracts', $contracts);
+            $request->getSession()->set('data', $data);
         }
 
         return $this->renderForm('contract/index.html.twig', [
