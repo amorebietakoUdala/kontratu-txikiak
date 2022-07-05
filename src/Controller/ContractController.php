@@ -189,7 +189,9 @@ class ContractController extends AbstractController
             } else {
                 $contracts = $request->getSession()->get('contracts');
                 $data = $request->getSession()->get('data');
-                $data['user'] = $this->userRepo->find($data['user']);
+                if ( $data['user'] !== null ) {
+                    $data['user'] = $this->userRepo->find($data['user']);
+                }
             }
             if (count($contracts) === 50) {
                 $this->addFlash('warning', 'messages.maxResultsReached');
