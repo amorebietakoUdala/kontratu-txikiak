@@ -161,7 +161,7 @@ class ContractController extends AbstractController
      */
     public function delete(Request $request, Contract $contract, EntityManagerInterface $em) {
         $page = $request->get('page') ? $request->get('page') : 1;
-        $pageSize = $request->get('pageSize') ? $request->get('pageSize') : 1;
+        $pageSize = $request->get('pageSize') ? $request->get('pageSize') : 10;
         if ($this->isCsrfTokenValid('delete'.$contract->getId(), $request->get('_token'))) {
             $em->remove($contract);
             $em->flush();
@@ -214,6 +214,8 @@ class ContractController extends AbstractController
             'form' => $form,
             'page' => $page,
             'pageSize' => $pageSize,
+            'sortName' => $request->query->get('sortName'),
+            'sortOrder' => $request->query->get('sortOrder'),
         ]);
     }
 
