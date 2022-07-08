@@ -15,6 +15,8 @@ export default class extends Controller {
     sortOrder = null;
 
     connect() {
+        this.sortName = this.sortNameValue;
+        this.sortOrder = this.sortOrderValue;
         $(this.element).bootstrapTable({
             cache: false,
             showExport: true,
@@ -29,8 +31,8 @@ export default class extends Controller {
             search: true,
             striped: true,
             sortStable: true,
-            sortName: this.sortNameValue,
-            sortOrder: this.sortOrderValue,
+            sortName: this.sortName,
+            sortOrder: this.sortOrder,
             pageSize: this.hasPageSizeValue ? this.pageSizeValue : 10,
             pageList: [10, 25, 50, 100],
             sortable: true,
