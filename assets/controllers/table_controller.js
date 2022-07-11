@@ -3,14 +3,20 @@ import { Controller } from '@hotwired/stimulus';
 import '../js/common/list';
 
 export default class extends Controller {
-   static targets = [];
-   static values = {
-       exportName: String,
-       pageSize: Number,
-       page: Number
-   }
+    static targets = [];
+    static values = {
+        exportName: String,
+        pageSize: Number,
+        page: Number,
+        sortName: Number,
+        sortOrder: String,
+        }
+    sortName = null;
+    sortOrder = null;
 
     connect() {
+        this.sortName = this.sortNameValue;
+        this.sortOrder = this.sortOrderValue;
         $(this.element).bootstrapTable({
             cache: false,
             showExport: true,
@@ -25,10 +31,16 @@ export default class extends Controller {
             search: true,
             striped: true,
             sortStable: true,
+            sortName: this.sortName,
+            sortOrder: this.sortOrder,
             pageSize: this.hasPageSizeValue ? this.pageSizeValue : 10,
             pageList: [10, 25, 50, 100],
             sortable: true,
             locale: $('html').attr('lang') + '-' + $('html').attr('lang').toUpperCase(),
+            onSort: (name, order) => {
+                this.sortName = name;
+                this.sortOrder = order;
+            }
         });
         var $table = $(this.element);
         $(function() {
@@ -48,20 +60,24 @@ export default class extends Controller {
         }
     }
 
-    updatePageParams(event) {
+    updateTableParams(event) {
         event.preventDefault();
         const destination = event.currentTarget.parentElement.href;
         const url = event.currentTarget.parentElement.dataset.url;
         const page = $(this.element).bootstrapTable('getOptions').pageNumber != null ? $(this.element).bootstrapTable('getOptions').pageNumber : 1;
         const pageSize = $(this.element).bootstrapTable('getOptions').pageSize != null ? $(this.element).bootstrapTable('getOptions').pageSize : 10;
-        const params = new URLSearchParams({
+        this.params = new URLSearchParams({
             page: page,
             pageSize: pageSize,
-          });
-        const returnUrl = url + '?' + params.toString();
-        const params2 = new URLSearchParams({
+        });
+        if ( this.sortName != null && this.sortOrder != null ) {
+            this.params.append('sortName', this.sortName);
+            this.params.append('sortOrder', this.sortOrder);
+        }
+        const returnUrl = url + '?' + this.params.toString();
+        let params2 = new URLSearchParams({
             returnUrl: returnUrl,
-          });
+        });
         document.location.href= destination + '?' + params2.toString(); 
     }
 }

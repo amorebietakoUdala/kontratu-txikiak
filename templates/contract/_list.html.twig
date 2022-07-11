@@ -4,6 +4,8 @@
    'exportName': 'contracts',
    'pageSize' : pageSize != null ? pageSize : 10,
    'page': page != null ? page : 1,
+   'sortName': sortName,
+   'sortOrder': sortOrder,
 }) }}>
    <thead>
       <tr>
@@ -44,10 +46,10 @@
             <td>
                <a href="{{ path('app_contract_show', {
                      'id': contract.id }
-                  ) }}" data-url="{{ absolute_url(path(app.request.attributes.get('_route'))) }}"><i class="fa fa-eye" title='{{ "btn.show" | trans | capitalize }}' data-action="click->table#updatePageParams"></i></a>&nbsp;
-               <a href="{{ path('app_contract_show', {
+                  ) }}" data-url="{{ absolute_url(path(app.request.attributes.get('_route'))) }}"><i class="fa fa-eye" title='{{ "btn.show" | trans | capitalize }}' data-action="click->table#updateTableParams"></i></a>&nbsp;
+               <a href="{{ path('app_contract_edit', {
                      'id': contract.id }
-                  ) }}" data-url="{{ absolute_url(path(app.request.attributes.get('_route'))) }}"><i class="fa fa-edit" title='{{ "btn.edit" | trans | capitalize }}' data-action="click->table#updatePageParams"></i></a>&nbsp;
+                  ) }}" data-url="{{ absolute_url(path(app.request.attributes.get('_route'))) }}"><i class="fa fa-edit" title='{{ "btn.edit" | trans | capitalize }}' data-action="click->table#updateTableParams"></i></a>&nbsp;
                {% if is_granted('ROLE_ADMIN') %}
                <a href="#" {{ stimulus_controller('alert', {
                   'confirmationText': 'message.deletionConfirmationText' | trans({},'alerts'),

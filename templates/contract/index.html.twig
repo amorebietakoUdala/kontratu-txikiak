@@ -10,6 +10,8 @@
          {{ include('contract/_list.html.twig', {
              'page' : page,
              'pageSize' : pageSize,
+             'sortName': sortName,
+             'sortOrder': sortOrder,
          }) }}
       </div>
       <div class="float-right fixed-bottom-right"><a href="{{ path('app_contract_new') }}" class="btn btn-primary rounded-circle"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></div>

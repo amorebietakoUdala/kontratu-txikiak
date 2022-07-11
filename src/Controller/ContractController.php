@@ -24,9 +24,11 @@ class ContractController extends AbstractController
 {
 
     private UserRepository $userRepo;
-    public function __construct(UserRepository $userRepo)
+    private ContractRepository $contractRepo;
+    public function __construct(UserRepository $userRepo, ContractRepository $contractRepo)
     {
         $this->userRepo = $userRepo;
+        $this->contractRepo = $contractRepo;
     }
 
     /**
@@ -76,6 +78,7 @@ class ContractController extends AbstractController
      * @Route("/{_locale}/contract/{id}/edit", name="app_contract_edit")
      */
     public function edit(Request $request, Contract $contract, EntityManagerInterface $em, ContractRepository $repo) {
+        $returnUrl = $request->query->get('returnUrl');
         $form = $this->createForm(ContractFormType::class, $contract,[
             'locale' => $request->getLocale(),
             'disabled' => false,
@@ -100,6 +103,9 @@ class ContractController extends AbstractController
             $em->persist($data);
             $em->flush();
             $this->addFlash('success', 'contract.saved');
+            if ( null !== $returnUrl ) {
+                return $this->redirect($returnUrl);
+            }
             return $this->redirectToRoute('app_contract_index');
         }
         return $this->renderForm('contract/edit.html.twig',[
@@ -149,7 +155,13 @@ class ContractController extends AbstractController
                 } else {
                     $this->addFlash('error', $response['error']);
                 }
-                return $this->redirectToRoute('app_contract_index');
+                return $this->redirectToRoute('app_contract_index',[
+                    'refresh' => true,
+                    'page' => $request->query->get('page'),
+                    'pageSize' => $request->query->get('pageSize'),
+                    'sortName' => $request->query->get('sortName'),
+                    'sortOrder' => $request->query->get('sortOrder'),
+                ]);
             } catch (HttpExceptionInterface $e) {
                 $this->addFlash('error',$e->getMessage());
             }
@@ -160,8 +172,6 @@ class ContractController extends AbstractController
      * @Route("/{_locale}/contract/{id}/delete", name="app_contract_delete")
      */
     public function delete(Request $request, Contract $contract, EntityManagerInterface $em) {
-        $page = $request->get('page') ? $request->get('page') : 1;
-        $pageSize = $request->get('pageSize') ? $request->get('pageSize') : 1;
         if ($this->isCsrfTokenValid('delete'.$contract->getId(), $request->get('_token'))) {
             $em->remove($contract);
             $em->flush();
@@ -170,9 +180,28 @@ class ContractController extends AbstractController
             $this->addFlash('error','error.invalidCsrfToken');
         }       
         return $this->redirectToRoute('app_contract_index', [
-            'page' => $page,
-            'pageSize' => $pageSize,
+            'refresh' => true,
+            'page' => $request->query->get('page'),
+            'pageSize' => $request->query->get('pageSize'),
+            'sortName' => $request->query->get('sortName'),
+            'sortOrder' => $request->query->get('sortOrder'),
         ]);
+    }
+
+    private function refreshContracts ($request) {
+        $data = $request->getSession()->get('data');
+        if ( $data['user'] !== null ) {
+            $data['user'] = $this->userRepo->find($data['user']);
+        }
+        $request->getSession()->set('data', $data);
+        $contracts = [];
+        if ($request->get('refresh')) {
+            $contracts = $this->contractRepo->findByAwardDateAndNotified($data['startDate'], $data['endDate'], $data['notified'], $data['user']);
+        } else {
+            $contracts = $request->getSession()->get('contracts');
+        } 
+
+        return $contracts;
     }
 
     /**
@@ -187,11 +216,12 @@ class ContractController extends AbstractController
             if ($request->getSession()->get('contracts') === null) {
                 $contracts = $repo->findBy([],['createdAt'=>'DESC'],50);
             } else {
-                $contracts = $request->getSession()->get('contracts');
                 $data = $request->getSession()->get('data');
                 if ( $data['user'] !== null ) {
                     $data['user'] = $this->userRepo->find($data['user']);
                 }
+                $request->getSession()->set('data', $data);
+                $contracts = $this->refreshContracts($request);
             }
             if (count($contracts) === 50) {
                 $this->addFlash('warning', 'messages.maxResultsReached');
@@ -214,6 +244,8 @@ class ContractController extends AbstractController
             'form' => $form,
             'page' => $page,
             'pageSize' => $pageSize,
+            'sortName' => $request->query->get('sortName'),
+            'sortOrder' => $request->query->get('sortOrder'),
         ]);
     }
 

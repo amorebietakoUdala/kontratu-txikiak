@@ -5,7 +5,7 @@ import $ from 'jquery';
 import '../js/common/select2';
 
 export default class extends Controller {
-    static targets = ['form', 'userSelect'];
+    static targets = ['form', 'userSelect', 'notifiedSelect', 'startDateInput', 'endDateInput'];
     static values = {
         locale: String,
     };
@@ -32,5 +32,12 @@ export default class extends Controller {
         } else {
            event.currentTarget.submit();
         }
+    }
+
+    reset(event) {
+        $(this.userSelectTarget).val('').trigger('change');
+        $(this.notifiedSelectTarget).val('');
+        $(this.startDateInputTarget).val('');
+        $(this.endDateInputTarget).val('');
     }
 }
