@@ -9,17 +9,17 @@
             }) }}>
             <div class="col-lg-2">
                {{ form_label(form.startDate) }}
-               {{ form_widget(form.startDate) }}
+               {{ form_widget(form.startDate, { 'attr': { 'data-contract-search-form-target': 'startDateInput' }}) }}
                {{ form_errors(form.startDate) }}
             </div>
             <div class="col-lg-2">
                {{ form_label(form.endDate) }}
-               {{ form_widget(form.endDate) }}
+               {{ form_widget(form.endDate, { 'attr': { 'data-contract-search-form-target': 'endDateInput' }}) }}
                {{ form_errors(form.endDate) }}
             </div>
             <div class="col-lg-2">
                {{ form_label(form.notified) }}
-               {{ form_widget(form.notified) }}
+               {{ form_widget(form.notified, { 'attr': { 'data-contract-search-form-target': 'notifiedSelect' }}) }}
                {{ form_errors(form.notified) }}
             </div>
             <div class="col-lg-2">
@@ -29,7 +29,7 @@
             </div>
             <div class="col-lg-auto">
                <button class="btn btn-primary" data-action="contract-search-form#submit" data-url="{{ path('app_contract_index') }}">{{ 'btn.search' | trans }}</button>
-               <button class="btn btn-secondary" type="button" onclick="javascript:this.form.reset();">{{ 'btn.clean' | trans }}</button>
+               <button class="btn btn-secondary" type="button" data-action="contract-search-form#reset">{{ 'btn.clean' | trans }}</button>
                <button class="btn btn-success" data-action="contract-search-form#submit" data-url="{{ path('app_contract_download') }}" type="button">{{ 'btn.download' | trans }}</button>
             </div>
       </div>
