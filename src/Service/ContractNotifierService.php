@@ -94,6 +94,7 @@ class ContractNotifierService
          'soapUser' => $user->getIdNumber(),
          'wsseUser' => $this->wsseUser,
          'wssePassword' => $this->wssePassword,
+         'pubDate' => (new \DateTime())->modify('+1 day'),
       ];
       $body = $this->twig->render('contract/_newContract.xml.twig', [
          'contract' => $contract,
