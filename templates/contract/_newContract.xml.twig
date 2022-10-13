@@ -10,13 +10,13 @@
 <soapenv:Body>
    <com:altaPeticionPublicacion>
       <xml>
-         <![CDATA[<peticion_publicacion schemaVersion="2020.03.16" xmlns="com/ejie/ac70a/integracionkontratazioa">
+         <![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?><peticion_publicacion schemaVersion="2020.03.16" xmlns="com/ejie/ac70a/integracionkontratazioa">
 	<id_expediente_origen>{{ params.date | date('Ymd') }}{{ "%04d"|format(contract.id) }}</id_expediente_origen>
 	<origen>{{ params.origin }}</origen>
 	<ficha_expediente>
 		<tipo_anuncio>A</tipo_anuncio>
-		<objeto_contrato_es>{{contract.subjectEs|convert_encoding('ISO-8859-1', 'UTF-8')}}</objeto_contrato_es>
-		<objeto_contrato_eu>{{contract.subjectEu|convert_encoding('ISO-8859-1', 'UTF-8')}}</objeto_contrato_eu>
+		<objeto_contrato_es>{{contract.subjectEs}}</objeto_contrato_es>
+		<objeto_contrato_eu>{{contract.subjectEu}}</objeto_contrato_eu>
 		<codigo_expediente>{{contract.code}}</codigo_expediente>
 		<contrato_menor>TRUE</contrato_menor>
 		<estado_tramitacion>AD</estado_tramitacion>
@@ -48,7 +48,7 @@
 				<identificador_empresa_licitadora>1</identificador_empresa_licitadora>
 				<tipo_identificacion_empresa>{{ contract.identificationType }}</tipo_identificacion_empresa>
 				<identificacion_empresa>{{ contract.idNumber }}</identificacion_empresa>
-				<razon_social>{{ contract.enterprise | convert_encoding('ISO-8859-1', 'UTF-8') }}</razon_social>
+				<razon_social>{{ contract.enterprise }}</razon_social>
 			</empresa_licitadora>
 		</empresas_licitadoras>
 		<informes_adjudicacion>
