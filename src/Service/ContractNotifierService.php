@@ -53,14 +53,15 @@ class ContractNotifierService
          return $errors[] = "error.nullContract";
       } 
       try {
+         $body = mb_convert_encoding(preg_replace('/\>\s+\</m', '><', $this->createBody($contract, $user)), 'ISO-8859-1', 'UTF-8');
          $response = $this->client->request('POST',$this->url, [
              'headers' => [
                   'Accept-Encoding' => 'gzip,deflate',
-                  'Content-Type' => 'text/xml;charset=UTF-8',
+                  'Content-Type' => 'text/xml;charset=ISO-8859-1',
                   'SOAPAction' => '""',
                   'Connection' => 'Keep-Alive',
              ],
-             'body' => $this->createBody($contract, $user),
+             'body' => $body,
          ]);
          $statusCode = $response->getStatusCode(false);
          $responseContent = $response->getContent(false);
