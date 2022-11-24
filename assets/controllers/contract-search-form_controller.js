@@ -13,6 +13,7 @@ export default class extends Controller {
     connect() {
         if ( this.userSelectTarget ) {
             const options = {
+              theme: "bootstrap-5",
               language: this.localeValue,
             };
             $(this.userSelectTarget).select2(options);
