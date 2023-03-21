@@ -10,6 +10,9 @@ security:
                 class: App\Entity\User
                 property: username
 
+    role_hierarchy:
+        ROLE_ADMIN:       [ROLE_KONTRATU_TXIKIAK]
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -41,7 +44,7 @@ security:
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/[es|eu]/admin, roles: ROLE_ADMIN }
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/, roles: ROLE_KONTRATU_TXIKIAK }
 
 when@test:
     security:

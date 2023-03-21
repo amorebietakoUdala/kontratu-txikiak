@@ -21,7 +21,7 @@ messages.maxResultsReached: "Defektuz bakarrik azken 50 emaitzak erakusten dira"
 messages.successfullyNotified: "Kontratua behar bezala notifikatu zaio Eusko Jaurlaritzari"
 messages.thisCanTakeSomeTime: "Honek zenbait segundo eraman ditzake"
 
-ROLE_USER: "Erabiltzailea"
+ROLE_KONTRATU_TXIKIAK: "Erabiltzailea"
 ROLE_ADMIN: "Administratzailea"
 
 # Menu

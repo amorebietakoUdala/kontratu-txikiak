@@ -21,7 +21,7 @@ messages.maxResultsReached: "Por defecto se muestran únicamente los últimos 50
 messages.successfullyNotified: "El contrato se ha notificado correctamente al Gobierno Vasco"
 messages.thisCanTakeSomeTime: "Esto puede tardar unos segundos"
 
-ROLE_USER: "Usuario"
+ROLE_KONTRATU_TXIKIAK: "Usuario"
 ROLE_ADMIN: "Administrador"
 
 # Menu

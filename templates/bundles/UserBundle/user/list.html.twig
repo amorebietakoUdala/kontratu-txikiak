@@ -33,15 +33,15 @@
 								<td>{{user.firstName}}</td>
 								<td>{{user.email}}</td>
 								<td>
-									{% set rolesCount = user.roles | filter((v,k) => v != 'ROLE_USER') | length %}
+									{% set rolesCount = user.roles | filter((v,k) => v != 'ROLE_KONTRATU_TXIKIAK') | length %}
 									{% if rolesCount > 0 %}
-										{% for role in user.roles | filter((v,k) => v != 'ROLE_USER') %}
+										{% for role in user.roles | filter((v,k) => v != 'ROLE_KONTRATU_TXIKIAK') %}
 											{{ role | trans | capitalize }}
 											{% if loop.index < rolesCount %}|
 											{% endif %}
 										{% endfor %}
 									{% else %}
-										{{ 'ROLE_USER' | trans }}
+										{{ 'ROLE_KONTRATU_TXIKIAK' | trans }}
 									{% endif %}
 								</td>
 								<td>
