@@ -1,1 +1,4 @@
 security.login.remember_me: "Recordarme"
+
+ROLE_KONTRATU_TXIKIAK: "Usuario"
+ROLE_ADMIN: "Administrador"
