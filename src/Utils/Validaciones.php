@@ -17,8 +17,8 @@ class Validaciones
 {
     public static function validar_dni($dni)
     {
-        $letra = substr($dni, -1);
-        $numeros = substr($dni, 0, -1);
+        $letra = substr((string) $dni, -1);
+        $numeros = substr((string) $dni, 0, -1);
         if (substr('TRWAGMYFPDXBNJZSQVHLCKE', $numeros % 23, 1) == mb_strtoupper($letra) && 1 == strlen($letra) && 8 == strlen($numeros)) {
             return true;
         } else {
@@ -35,7 +35,7 @@ class Validaciones
         //con la condicion de que el autor jamas sera responsable de su uso.
         //Returns: 1 = NIF ok, 2 = CIF ok, 3 = NIE ok, -1 = NIF bad, -2 = CIF bad, -3 = NIE bad, 0 = ??? bad
 
-        $cif = mb_strtoupper($cif);
+        $cif = mb_strtoupper((string) $cif);
         for ($i = 0; $i < 9; ++$i) {
             $num[$i] = substr($cif, $i, 1);
         }
@@ -54,7 +54,7 @@ class Validaciones
 
         //comprobacion de NIEs
         if (preg_match('/^[XYZ]{1}/', $cif)) {
-            if ($num[8] == substr('TRWAGMYFPDXBNJZSQVHLCKE', substr(str_replace(array('X', 'Y', 'Z'), array('0', '1', '2'), $cif), 0, 8) % 23, 1)) {
+            if ($num[8] == substr('TRWAGMYFPDXBNJZSQVHLCKE', substr(str_replace(['X', 'Y', 'Z'], ['0', '1', '2'], $cif), 0, 8) % 23, 1)) {
                 return 3;
             } else {
                 return -3;
@@ -97,7 +97,7 @@ class Validaciones
     public static function getNumDNI($numDocumento)
     {
         if (null !== self::getDNILetra($numDocumento)) {
-            $zenbakia = substr($numDocumento, 0, -1);
+            $zenbakia = substr((string) $numDocumento, 0, -1);
 
             return $zenbakia;
         } else {
@@ -107,7 +107,7 @@ class Validaciones
 
     public static function getDNILetra($numDocumento)
     {
-        $letra = substr($numDocumento, -1);
+        $letra = substr((string) $numDocumento, -1);
         if (!is_numeric($letra)) {
             return $letra;
         }

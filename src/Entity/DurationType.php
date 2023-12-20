@@ -7,27 +7,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=DurationTypeRepository::class)
- */
-class DurationType
+#[ORM\Entity(repositoryClass: DurationTypeRepository::class)]
+class DurationType implements \Stringable
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $name;
+    #[ORM\Column(type: 'string', length: 50)]
+    private ?string $name = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="durationType")
-     */
-    private $contracts;
+    #[ORM\OneToMany(targetEntity: Contract::class, mappedBy: 'durationType')]
+    private Collection|array $contracts;
 
     public function __construct()
     {
@@ -88,7 +80,7 @@ class DurationType
         return $this;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->id.'';
     }
 }

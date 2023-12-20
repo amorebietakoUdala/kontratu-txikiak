@@ -88,23 +88,17 @@ class ContractFormType extends AbstractType
             ->add('type', EntityType::class,[
                 'label' => 'contract.type',
                 'class' => ContractType::class,
-                'choice_label' =>  function ($type) {
-                    return $type->getName();
-                },
+                'choice_label' =>  fn($type) => $type->getName(),
             ])
             ->add('durationType', EntityType::class,[
                 'label' => 'contract.durationType',
                 'class' => DurationType::class,
-                'choice_label' =>  function ($type) {
-                    return $type->getName();
-                },
+                'choice_label' =>  fn($type) => $type->getName(),
             ])
             ->add('identificationType', EntityType::class,[
                 'label' => 'contract.identificationType',
                 'class' => IdentificationType::class,
-                'choice_label' =>  function ($type) {
-                    return $type->getName();
-                },
+                'choice_label' =>  fn($type) => $type->getName(),
             ])
         ;
     }

@@ -23,17 +23,11 @@ use \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 class ContractController extends AbstractController
 {
 
-    private UserRepository $userRepo;
-    private ContractRepository $contractRepo;
-    public function __construct(UserRepository $userRepo, ContractRepository $contractRepo)
+    public function __construct(private readonly UserRepository $userRepo, private readonly ContractRepository $contractRepo)
     {
-        $this->userRepo = $userRepo;
-        $this->contractRepo = $contractRepo;
     }
 
-    /**
-     * @Route("/{_locale}/contract/new", name="app_contract_new")
-     */
+    #[Route(path: '/{_locale}/contract/new', name: 'app_contract_new')]
     public function new(Request $request, EntityManagerInterface $em, ContractRepository $repo) {
         $form = $this->createForm(ContractFormType::class, new Contract(),[
             'locale' => $request->getLocale(),
@@ -52,16 +46,14 @@ class ContractController extends AbstractController
             }
         }
 
-        return $this->renderForm('contract/edit.html.twig',[
+        return $this->render('contract/edit.html.twig',[
             'form' => $form,
             'readonly' => false,
             'new' => true,
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/contract/download", name="app_contract_download")
-     */
+    #[Route(path: '/{_locale}/contract/download', name: 'app_contract_download')]
     public function download(Request $request, ContractRepository $repo) {
         $form = $this->createForm(ContractSearchFormType::class, null, [
             'locale' => $request->getLocale(),
@@ -74,9 +66,7 @@ class ContractController extends AbstractController
         return $this->generateSpreadSheet($contracts);
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}/edit", name="app_contract_edit")
-     */
+    #[Route(path: '/{_locale}/contract/{id}/edit', name: 'app_contract_edit')]
     public function edit(Request $request, Contract $contract, EntityManagerInterface $em, ContractRepository $repo) {
         $returnUrl = $request->query->get('returnUrl');
         $form = $this->createForm(ContractFormType::class, $contract,[
@@ -92,7 +82,7 @@ class ContractController extends AbstractController
                 $this->addFlash('error', new TranslatableMessage('error.duplicateCode',[
                     '{code}' => $contract->getCode(),
                 ]));
-                return $this->renderForm('contract/edit.html.twig',[
+                return $this->render('contract/edit.html.twig',[
                     'contract' => $contract,
                     'form' => $form,
                     'readonly' => false,
@@ -108,7 +98,7 @@ class ContractController extends AbstractController
             }
             return $this->redirectToRoute('app_contract_index');
         }
-        return $this->renderForm('contract/edit.html.twig',[
+        return $this->render('contract/edit.html.twig',[
             'contract' => $contract,
             'form' => $form,
             'readonly' => false,
@@ -116,16 +106,14 @@ class ContractController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}", name="app_contract_show")
-     */
+    #[Route(path: '/{_locale}/contract/{id}', name: 'app_contract_show')]
     public function show(Request $request, Contract $contract) {
         $form = $this->createForm(ContractFormType::class, $contract,[
             'locale' => $request->getLocale(),
             'disabled' => true,
         ]);
 
-        return $this->renderForm('contract/edit.html.twig',[
+        return $this->render('contract/edit.html.twig',[
             'contract' => $contract,
             'form' => $form,
             'readonly' => true,
@@ -133,9 +121,7 @@ class ContractController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}/send", name="app_contract_send")
-     */
+    #[Route(path: '/{_locale}/contract/{id}/send', name: 'app_contract_send')]
     public function send(Request $request, Contract $contract, EntityManagerInterface $em, ContractNotifierService $contractNotifierService) {
         /** @var User $user  */
         $user = $this->getUser();
@@ -168,9 +154,7 @@ class ContractController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}/delete", name="app_contract_delete")
-     */
+    #[Route(path: '/{_locale}/contract/{id}/delete', name: 'app_contract_delete')]
     public function delete(Request $request, Contract $contract, EntityManagerInterface $em) {
         if ($this->isCsrfTokenValid('delete'.$contract->getId(), $request->get('_token'))) {
             $em->remove($contract);
@@ -204,13 +188,11 @@ class ContractController extends AbstractController
         return $contracts;
     }
 
-    /**
-     * @Route("/{_locale}/contract", name="app_contract_index")
-     */
+    #[Route(path: '/{_locale}/contract', name: 'app_contract_index')]
     public function index(Request $request, ContractRepository $repo): Response
     {
-        $page = $request->query->get('page') ?  $request->query->get('page') : 1;
-        $pageSize = $request->query->get('pageSize') ?  $request->query->get('pageSize') : 10;
+        $page = $request->query->get('page') ?: 1;
+        $pageSize = $request->query->get('pageSize') ?: 10;
         $data = [];
         if ($request->getMethod() === Request::METHOD_GET) {
             if ($request->getSession()->get('contracts') === null) {
@@ -239,7 +221,7 @@ class ContractController extends AbstractController
             $request->getSession()->set('data', $data);
         }
 
-        return $this->renderForm('contract/index.html.twig', [
+        return $this->render('contract/index.html.twig', [
             'contracts' => $contracts,
             'form' => $form,
             'page' => $page,
@@ -249,9 +231,7 @@ class ContractController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/", name="app_home")
-     */
+    #[Route(path: '/', name: 'app_home')]
     public function home() {
         return $this->redirectToRoute('app_contract_index');
     }
@@ -317,7 +297,7 @@ class ContractController extends AbstractController
         $fileName = 'contracts.xlsx';
         $writer->save($rootDir."/public/downloads/$fileName");
 
-        $response = new Response(null, 200,[
+        $response = new Response(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK,[
             'Content-Disposition' => "attachment; filename=\"$fileName\"",
             "Content-Type" => 'application/vnd.ms-excel',
         ]);

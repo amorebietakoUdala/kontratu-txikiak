@@ -7,32 +7,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=ContractTypeRepository::class)
- */
-class ContractType
+#[ORM\Entity(repositoryClass: ContractTypeRepository::class)]
+class ContractType implements \Stringable
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $name;
+    #[ORM\Column(type: 'string', length: 50)]
+    private ?string $name = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="type")
-     */
-    private $contracts;
+    #[ORM\OneToMany(targetEntity: Contract::class, mappedBy: 'type')]
+    private Collection|array $contracts;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     */
-    private $maxAmount;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private ?string $maxAmount = null;
 
     public function __construct()
     {
@@ -93,7 +83,7 @@ class ContractType
         return $this;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->id.'';
     }
 

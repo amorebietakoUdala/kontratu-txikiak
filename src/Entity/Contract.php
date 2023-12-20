@@ -6,102 +6,67 @@ use App\Repository\ContractRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-/**
- * @ORM\Entity(repositoryClass=ContractRepository::class)
- */
+#[ORM\Entity(repositoryClass: ContractRepository::class)]
 class Contract
 {
     public function __construct()
     {
-        $this->notified = false;
     }
 
     use TimestampableEntity;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=20)
-     */
-    private $code;
+    #[ORM\Column(type: 'string', length: 20)]
+    private ?string $code = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ContractType::class, inversedBy="contracts")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $type;
+    #[ORM\ManyToOne(targetEntity: ContractType::class, inversedBy: 'contracts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?\App\Entity\ContractType $type = null;
 
-    /**
-     * @ORM\Column(type="string", length=1024)
-     */
-    private $subjectEs;
+    #[ORM\Column(type: 'string', length: 1024)]
+    private ?string $subjectEs = null;
 
-    /**
-     * @ORM\Column(type="string", length=1024)
-     */
-    private $subjectEu;
+    #[ORM\Column(type: 'string', length: 1024)]
+    private ?string $subjectEu = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-    private $amountWithVAT;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private ?string $amountWithVAT = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=DurationType::class, inversedBy="contracts")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $durationType;
+    #[ORM\ManyToOne(targetEntity: DurationType::class, inversedBy: 'contracts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?\App\Entity\DurationType $durationType = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-    private $duration;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private ?string $duration = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=IdentificationType::class, inversedBy="contracts")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $identificationType;
+    #[ORM\ManyToOne(targetEntity: IdentificationType::class, inversedBy: 'contracts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?\App\Entity\IdentificationType $identificationType = null;
 
-    /**
-     * @ORM\Column(type="string", length=15)
-     */
-    private $idNumber;
+    #[ORM\Column(type: 'string', length: 15)]
+    private ?string $idNumber = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $enterprise;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string|bool|null $enterprise = null;
 
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $awardDate;
+    #[ORM\Column(type: 'date')]
+    private ?\DateTimeInterface $awardDate = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="contracts")
-     */
-    private $user;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'contracts')]
+    private ?\App\Entity\User $user = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $notified;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $notified = false;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $responseId;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $responseId = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     */
-    private $amountWithoutVAT;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private ?string $amountWithoutVAT = null;
 
     public function getId(): ?int
     {
@@ -110,7 +75,7 @@ class Contract
 
     public function getCode(): ?string
     {
-        return mb_strtoupper($this->code);
+        return mb_strtoupper((string) $this->code);
     }
 
     public function setCode(string $code): self

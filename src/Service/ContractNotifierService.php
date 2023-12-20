@@ -12,41 +12,18 @@ use Twig\Environment;
 
 class ContractNotifierService
 {
-   const RESPONSE_OK = '00000';
+   final public const RESPONSE_OK = '00000';
 
-    private $client = null;
-    private $twig = null;
-    private $url;
-    private $origin;
-    private $adjudicator;
-    private $entity;
-    private $organ;
-    private $powerType;
-    private $mainActivity;
-    private $wsseUser;
-    private $wssePassword;
-
-    public function __construct(HttpClientInterface $client, Environment $twig, $url, $origin, $adjudicator, $entity, $organ, $powerType, $mainActivity, $wsseUser, $wssePassword) {
-        $this->client = $client;
-        $this->twig = $twig;
-        $this->url = $url;
-        $this->origin = $origin;
-        $this->adjudicator = $adjudicator;
-        $this->entity =  $entity;
-        $this->organ = $organ;
-        $this->powerType = $powerType;
-        $this->mainActivity = $mainActivity;
-        $this->wsseUser = $wsseUser;
-        $this->wssePassword = $wssePassword;
+    public function __construct(private readonly HttpClientInterface $client, private readonly Environment $twig, private $url, private $origin, private $adjudicator, private $entity, private $organ, private $powerType, private $mainActivity, private $wsseUser, private $wssePassword)
+    {
     }
 
    /**
-   * Create the body of the Web Service Request
-   * 
-   * @param Contract $contract
-   * 
-   * @return array<int,string>
-   */
+    * Create the body of the Web Service Request
+    *
+    *
+    * @return array<int,string>
+    */
    public function notify(Contract $contract, User $user) {
       $result = [];
       if (null === $contract) {
@@ -78,9 +55,8 @@ class ContractNotifierService
 
   /**
    * Create the body of the Web Service Request
-   * 
-   * @param Contract $contract
-   * 
+   *
+   *
    * @return string
    */
   private function createBody(Contract $contract, User $user) {
