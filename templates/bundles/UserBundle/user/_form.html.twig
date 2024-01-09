@@ -8,6 +8,11 @@
 			<span class="text-danger">{{ form_errors(form.username) }}</span>
 			{{ form_widget(form.username, {'attr': {'class': 'form-control form-control-sm'}}) }}
 		</div>
+		<div class="col-lg-2">
+			{{ form_label(form.idNumber) }}
+			<span class="text-danger">{{ form_errors(form.idNumber) }}</span>
+			{{ form_widget(form.idNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
+		</div>		
 		<div class="col-lg-3">
 			{{ form_label(form.firstName) }}
 			<span class="text-danger">{{ form_errors(form.firstName) }}</span>
