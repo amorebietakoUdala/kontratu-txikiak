@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Contract;
 use App\Entity\User;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,20 @@ class ContractNotifierService
 {
    final public const RESPONSE_OK = '00000';
 
-    public function __construct(private readonly HttpClientInterface $client, private readonly Environment $twig, private $url, private $origin, private $adjudicator, private $entity, private $organ, private $powerType, private $mainActivity, private $wsseUser, private $wssePassword)
+    public function __construct(
+      private readonly HttpClientInterface $client, 
+      private readonly Environment $twig, 
+      private readonly LoggerInterface $logger,
+      private $url, 
+      private $origin, 
+      private $adjudicator, 
+      private $entity, 
+      private $organ, 
+      private $powerType, 
+      private $mainActivity, 
+      private $wsseUser, 
+      private $wssePassword)
+
     {
     }
 
@@ -43,6 +57,7 @@ class ContractNotifierService
          $statusCode = $response->getStatusCode(false);
          $responseContent = $response->getContent(false);
          if ($statusCode === Response::HTTP_OK) {
+            $this->logger->debug($responseContent);
             $result = $this->proccessResponse($responseContent);
             return $result;
          } else {
@@ -97,9 +112,11 @@ class ContractNotifierService
          $response['result'] = 'OK';
          $responseId = $crawler->filterXPath('.//id_peticion_perfil')->count() > 0 ? $crawler->filterXPath('.//id_peticion_perfil')->text() : null;
          $response['id'] = $responseId;
+         $response['raw'] = $responseContent;
       } else {
          $response['result'] = 'NOK';
          $response['error'] = $mensajeError;
+         $response['raw'] = $responseContent;
       }
       return $response;
    }

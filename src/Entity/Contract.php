@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ContractRepository;
+use App\Entity\ContractType;
+use App\Entity\DurationType;
+use App\Entity\IdentificationType;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -25,7 +29,7 @@ class Contract
 
     #[ORM\ManyToOne(targetEntity: ContractType::class, inversedBy: 'contracts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?\App\Entity\ContractType $type = null;
+    private ?ContractType $type = null;
 
     #[ORM\Column(type: 'string', length: 1024)]
     private ?string $subjectEs = null;
@@ -38,14 +42,14 @@ class Contract
 
     #[ORM\ManyToOne(targetEntity: DurationType::class, inversedBy: 'contracts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?\App\Entity\DurationType $durationType = null;
+    private ?DurationType $durationType = null;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     private ?string $duration = null;
 
     #[ORM\ManyToOne(targetEntity: IdentificationType::class, inversedBy: 'contracts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?\App\Entity\IdentificationType $identificationType = null;
+    private ?IdentificationType $identificationType = null;
 
     #[ORM\Column(type: 'string', length: 15)]
     private ?string $idNumber = null;
@@ -57,13 +61,16 @@ class Contract
     private ?\DateTimeInterface $awardDate = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'contracts')]
-    private ?\App\Entity\User $user = null;
+    private ?User $user = null;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $notified = false;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $responseId = null;
+
+    #[ORM\Column(type: 'string', length: 10000, nullable: true)]
+    private ?string $rawResponse = null;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     private ?string $amountWithoutVAT = null;
@@ -250,6 +257,18 @@ class Contract
     public function setAmountWithoutVAT(?string $amountWithoutVAT): self
     {
         $this->amountWithoutVAT = $amountWithoutVAT;
+
+        return $this;
+    }
+
+    public function getRawResponse(): ?string
+    {
+        return $this->rawResponse;
+    }
+
+    public function setRawResponse($rawResponse): self
+    {
+        $this->rawResponse = $rawResponse;
 
         return $this;
     }
