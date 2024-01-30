@@ -15,26 +15,25 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Translation\TranslatableMessage;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use \PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ContractController extends AbstractController
 {
 
-    private UserRepository $userRepo;
-    private ContractRepository $contractRepo;
-    public function __construct(UserRepository $userRepo, ContractRepository $contractRepo)
+    public function __construct(
+        private readonly UserRepository $userRepo, 
+        private readonly ContractRepository $contractRepo,
+        private readonly EntityManagerInterface $em,
+        )
     {
-        $this->userRepo = $userRepo;
-        $this->contractRepo = $contractRepo;
     }
 
-    /**
-     * @Route("/{_locale}/contract/new", name="app_contract_new")
-     */
-    public function new(Request $request, EntityManagerInterface $em, ContractRepository $repo) {
+    #[Route(path: '/{_locale}/contract/new', name: 'app_contract_new')]
+    public function new(Request $request, ContractRepository $repo) {
         $form = $this->createForm(ContractFormType::class, new Contract(),[
             'locale' => $request->getLocale(),
             'disabled' => false,
@@ -45,23 +44,21 @@ class ContractController extends AbstractController
             $data = $form->getData();
             if ( !$this->checkForErrors($data, $repo) ) {
                 $data->setUser($this->getUser());
-                $em->persist($data);
-                $em->flush();
+                $this->em->persist($data);
+                $this->em->flush();
                 $this->addFlash('success', 'contract.saved');
                 return $this->redirectToRoute('app_contract_index');
             }
         }
 
-        return $this->renderForm('contract/edit.html.twig',[
+        return $this->render('contract/edit.html.twig',[
             'form' => $form,
             'readonly' => false,
             'new' => true,
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/contract/download", name="app_contract_download")
-     */
+    #[Route(path: '/{_locale}/contract/download', name: 'app_contract_download')]
     public function download(Request $request, ContractRepository $repo) {
         $form = $this->createForm(ContractSearchFormType::class, null, [
             'locale' => $request->getLocale(),
@@ -74,10 +71,8 @@ class ContractController extends AbstractController
         return $this->generateSpreadSheet($contracts);
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}/edit", name="app_contract_edit")
-     */
-    public function edit(Request $request, Contract $contract, EntityManagerInterface $em, ContractRepository $repo) {
+    #[Route(path: '/{_locale}/contract/{id}/edit', name: 'app_contract_edit')]
+    public function edit(Request $request, Contract $contract, ContractRepository $repo) {
         $returnUrl = $request->query->get('returnUrl');
         $form = $this->createForm(ContractFormType::class, $contract,[
             'locale' => $request->getLocale(),
@@ -92,7 +87,7 @@ class ContractController extends AbstractController
                 $this->addFlash('error', new TranslatableMessage('error.duplicateCode',[
                     '{code}' => $contract->getCode(),
                 ]));
-                return $this->renderForm('contract/edit.html.twig',[
+                return $this->render('contract/edit.html.twig',[
                     'contract' => $contract,
                     'form' => $form,
                     'readonly' => false,
@@ -100,15 +95,15 @@ class ContractController extends AbstractController
                 ]);
             }
             $data->setNotified(false);
-            $em->persist($data);
-            $em->flush();
+            $this->em->persist($data);
+            $this->em->flush();
             $this->addFlash('success', 'contract.saved');
             if ( null !== $returnUrl ) {
                 return $this->redirect($returnUrl);
             }
             return $this->redirectToRoute('app_contract_index');
         }
-        return $this->renderForm('contract/edit.html.twig',[
+        return $this->render('contract/edit.html.twig',[
             'contract' => $contract,
             'form' => $form,
             'readonly' => false,
@@ -116,16 +111,14 @@ class ContractController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}", name="app_contract_show")
-     */
+    #[Route(path: '/{_locale}/contract/{id}', name: 'app_contract_show')]
     public function show(Request $request, Contract $contract) {
         $form = $this->createForm(ContractFormType::class, $contract,[
             'locale' => $request->getLocale(),
             'disabled' => true,
         ]);
 
-        return $this->renderForm('contract/edit.html.twig',[
+        return $this->render('contract/edit.html.twig',[
             'contract' => $contract,
             'form' => $form,
             'readonly' => true,
@@ -133,10 +126,8 @@ class ContractController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}/send", name="app_contract_send")
-     */
-    public function send(Request $request, Contract $contract, EntityManagerInterface $em, ContractNotifierService $contractNotifierService) {
+    #[Route(path: '/{_locale}/contract/{id}/send', name: 'app_contract_send')]
+    public function send(Request $request, Contract $contract,  ContractNotifierService $contractNotifierService) {
         /** @var User $user  */
         $user = $this->getUser();
         if ( null === $user->getIdNumber() ) {
@@ -149,10 +140,14 @@ class ContractController extends AbstractController
                 if( $response['result'] === 'OK' ) {
                     $contract->setNotified(true);
                     $contract->setResponseId($response['id']);
-                    $em->persist($contract);
-                    $em->flush();
+                    $contract->setRawResponse($response['raw']);
+                    $this->em->persist($contract);
+                    $this->em->flush();
                     $this->addFlash('success','messages.successfullyNotified');
                 } else {
+                    $contract->setRawResponse($response['raw']);
+                    $this->em->persist($contract);
+                    $this->em->flush();
                     $this->addFlash('error', $response['error']);
                 }
                 return $this->redirectToRoute('app_contract_index',[
@@ -168,13 +163,11 @@ class ContractController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/{_locale}/contract/{id}/delete", name="app_contract_delete")
-     */
+    #[Route(path: '/{_locale}/contract/{id}/delete', name: 'app_contract_delete')]
     public function delete(Request $request, Contract $contract, EntityManagerInterface $em) {
         if ($this->isCsrfTokenValid('delete'.$contract->getId(), $request->get('_token'))) {
-            $em->remove($contract);
-            $em->flush();
+            $this->em->remove($contract);
+            $this->em->flush();
             $this->addFlash('success','contract.deleted');
         } else {
             $this->addFlash('error','error.invalidCsrfToken');
@@ -204,13 +197,11 @@ class ContractController extends AbstractController
         return $contracts;
     }
 
-    /**
-     * @Route("/{_locale}/contract", name="app_contract_index")
-     */
+    #[Route(path: '/{_locale}/contract', name: 'app_contract_index')]
     public function index(Request $request, ContractRepository $repo): Response
     {
-        $page = $request->query->get('page') ?  $request->query->get('page') : 1;
-        $pageSize = $request->query->get('pageSize') ?  $request->query->get('pageSize') : 10;
+        $page = $request->query->get('page') ?: 1;
+        $pageSize = $request->query->get('pageSize') ?: 10;
         $data = [];
         if ($request->getMethod() === Request::METHOD_GET) {
             if ($request->getSession()->get('contracts') === null) {
@@ -239,7 +230,7 @@ class ContractController extends AbstractController
             $request->getSession()->set('data', $data);
         }
 
-        return $this->renderForm('contract/index.html.twig', [
+        return $this->render('contract/index.html.twig', [
             'contracts' => $contracts,
             'form' => $form,
             'page' => $page,
@@ -249,9 +240,7 @@ class ContractController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/", name="app_home")
-     */
+    #[Route(path: '/', name: 'app_home')]
     public function home() {
         return $this->redirectToRoute('app_contract_index');
     }
@@ -312,12 +301,12 @@ class ContractController extends AbstractController
             $this->fillContract($sheet,$startRow, $contract);
             $startRow++;
         }
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer = new Xlsx($spreadsheet);
         $writer->setPreCalculateFormulas(false);
         $fileName = 'contracts.xlsx';
         $writer->save($rootDir."/public/downloads/$fileName");
 
-        $response = new Response(null, 200,[
+        $response = new Response(null, Response::HTTP_OK,[
             'Content-Disposition' => "attachment; filename=\"$fileName\"",
             "Content-Type" => 'application/vnd.ms-excel',
         ]);

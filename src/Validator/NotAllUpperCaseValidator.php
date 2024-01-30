@@ -4,18 +4,19 @@ namespace App\Validator;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use App\Validator\NotAllUpperCase;
 
 class NotAllUpperCaseValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
-        /** @var App\Validator\NotAllUpperCase $constraint */
+        /** @var NotAllUpperCase $constraint */
 
         if (null === $value || '' === $value) {
             return;
         }
         
-        if ( $value === mb_strtoupper($value) ) {
+        if ( $value === mb_strtoupper((string) $value) ) {
             $this->context->buildViolation($constraint->message)
             ->setParameter('{{ value }}', $value)
             ->addViolation();
@@ -23,8 +24,8 @@ class NotAllUpperCaseValidator extends ConstraintValidator
         }
         $upperCase = 0;
         $lowerCase = 0;
-        $length = mb_strlen($value);
-        foreach (str_split($value) as $char) {
+        $length = mb_strlen((string) $value);
+        foreach (str_split((string) $value) as $char) {
             if ( ctype_upper($char) ) {
                 $upperCase++; 
             } else {

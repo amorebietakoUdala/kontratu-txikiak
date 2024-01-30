@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsValidExpCodeValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         /* @var $constraint \App\Validator\IsValidExpCode */
 

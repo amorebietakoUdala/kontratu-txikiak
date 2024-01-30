@@ -7,32 +7,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=IdentificationTypeRepository::class)
- */
-class IdentificationType
+#[ORM\Entity(repositoryClass: IdentificationTypeRepository::class)]
+class IdentificationType implements \Stringable
 {
 
-    const IDENTIFICATION_TYPE_CIF=1;
-    const IDENTIFICATION_TYPE_NIF=2;
-    const IDENTIFICATION_TYPE_EXTRANJERO=3;
+    final public const IDENTIFICATION_TYPE_CIF=1;
+    final public const IDENTIFICATION_TYPE_NIF=2;
+    final public const IDENTIFICATION_TYPE_EXTRANJERO=3;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $name;
+    #[ORM\Column(type: 'string', length: 50)]
+    private ?string $name = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="identificationType")
-     */
-    private $contracts;
+    #[ORM\OneToMany(targetEntity: Contract::class, mappedBy: 'identificationType')]
+    private Collection|array $contracts;
 
     public function __construct()
     {
@@ -93,7 +85,7 @@ class IdentificationType
         return $this;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->id.'';
     }
 }

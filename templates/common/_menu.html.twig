@@ -16,13 +16,13 @@
 		{% if is_granted('ROLE_ADMIN') %}
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle
-				{{ ( app.request.attributes.get('_route') == 'admin_user_list' 
+				{{ ( app.request.attributes.get('_route') == 'admin_user_index' 
 						 )	
 					? ' active' : '' 
 				}}"
 				data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ 'navitem.administration' | trans | capitalize }}</a>
 			<ul class="dropdown-menu">
-				<li><a class="dropdown-item" href="{{ path('admin_user_list') }}">{{"navitem.users" | trans | capitalize}}</a></li>
+				<li><a class="dropdown-item" href="{{ path('admin_user_index') }}">{{"navitem.users" | trans | capitalize}}</a></li>
 			</ul>
 		</li>
 		{% endif %}}

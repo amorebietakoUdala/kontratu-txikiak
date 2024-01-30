@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Contract;
 use App\Entity\User;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,41 +13,31 @@ use Twig\Environment;
 
 class ContractNotifierService
 {
-   const RESPONSE_OK = '00000';
+   final public const RESPONSE_OK = '00000';
 
-    private $client = null;
-    private $twig = null;
-    private $url;
-    private $origin;
-    private $adjudicator;
-    private $entity;
-    private $organ;
-    private $powerType;
-    private $mainActivity;
-    private $wsseUser;
-    private $wssePassword;
+    public function __construct(
+      private readonly HttpClientInterface $client, 
+      private readonly Environment $twig, 
+      private readonly LoggerInterface $logger,
+      private $url, 
+      private $origin, 
+      private $adjudicator, 
+      private $entity, 
+      private $organ, 
+      private $powerType, 
+      private $mainActivity, 
+      private $wsseUser, 
+      private $wssePassword)
 
-    public function __construct(HttpClientInterface $client, Environment $twig, $url, $origin, $adjudicator, $entity, $organ, $powerType, $mainActivity, $wsseUser, $wssePassword) {
-        $this->client = $client;
-        $this->twig = $twig;
-        $this->url = $url;
-        $this->origin = $origin;
-        $this->adjudicator = $adjudicator;
-        $this->entity =  $entity;
-        $this->organ = $organ;
-        $this->powerType = $powerType;
-        $this->mainActivity = $mainActivity;
-        $this->wsseUser = $wsseUser;
-        $this->wssePassword = $wssePassword;
+    {
     }
 
    /**
-   * Create the body of the Web Service Request
-   * 
-   * @param Contract $contract
-   * 
-   * @return array<int,string>
-   */
+    * Create the body of the Web Service Request
+    *
+    *
+    * @return array<int,string>
+    */
    public function notify(Contract $contract, User $user) {
       $result = [];
       if (null === $contract) {
@@ -66,6 +57,7 @@ class ContractNotifierService
          $statusCode = $response->getStatusCode(false);
          $responseContent = $response->getContent(false);
          if ($statusCode === Response::HTTP_OK) {
+            $this->logger->debug($responseContent);
             $result = $this->proccessResponse($responseContent);
             return $result;
          } else {
@@ -78,9 +70,8 @@ class ContractNotifierService
 
   /**
    * Create the body of the Web Service Request
-   * 
-   * @param Contract $contract
-   * 
+   *
+   *
    * @return string
    */
   private function createBody(Contract $contract, User $user) {
@@ -121,9 +112,11 @@ class ContractNotifierService
          $response['result'] = 'OK';
          $responseId = $crawler->filterXPath('.//id_peticion_perfil')->count() > 0 ? $crawler->filterXPath('.//id_peticion_perfil')->text() : null;
          $response['id'] = $responseId;
+         $response['raw'] = $responseContent;
       } else {
          $response['result'] = 'NOK';
          $response['error'] = $mensajeError;
+         $response['raw'] = $responseContent;
       }
       return $response;
    }
