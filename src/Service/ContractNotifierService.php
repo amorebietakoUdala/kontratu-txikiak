@@ -45,6 +45,7 @@ class ContractNotifierService
       } 
       try {
          $body = mb_convert_encoding(preg_replace('/\>\s+\</m', '><', $this->createBody($contract, $user)), 'ISO-8859-1', 'UTF-8');
+         $this->logger->debug('Body:'.$body);
          $response = $this->client->request('POST',$this->url, [
              'headers' => [
                   'Accept-Encoding' => 'gzip,deflate',
@@ -64,6 +65,7 @@ class ContractNotifierService
             return $result[] = $responseContent;    
          }
       } catch (HttpExceptionInterface $e) {
+         $this->logger->debug('Exception Catched'.$e->getMessage());
          return $result[] = $e->getMessage();
       }
   }
