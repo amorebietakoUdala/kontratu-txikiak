@@ -4708,7 +4708,7 @@ __metadata:
     regenerator-runtime: ^0.13.2
     select2: ^4.0.13
     select2-bootstrap-5-theme: ^1.3.0
-    sweetalert2: ^11.4.6
+    sweetalert2: ^11.22.4
     tableexport.jquery.plugin: ^1.26.0
     webpack: ^5.76.0
     webpack-cli: ^4.9.2
@@ -5036,10 +5036,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sweetalert2@npm:^11.4.6":
-  version: 11.10.1
-  resolution: "sweetalert2@npm:11.10.1"
-  checksum: 0e2ad6a278de1d207a138c24c271574b09abbb79ecb4b4047fa8f2ccb9f54232cf6fa48e1c5e6be812a7b3419532461281a4a8f90336d17a6b6b2b4604139f9a
+"sweetalert2@npm:^11.22.4":
+  version: 11.22.4
+  resolution: "sweetalert2@npm:11.22.4"
+  checksum: 2d9072f53002de082a5d290133e0f485b5e405d9e6b53d043fee74db395a508510131e5e3e68e0c7528fea773383098f552a473d117a0123a4eaec8a604bbe9d
   languageName: node
   linkType: hard
 
