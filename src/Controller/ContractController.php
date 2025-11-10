@@ -20,6 +20,7 @@ use Symfony\Component\Translation\TranslatableMessage;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use \PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ContractController extends AbstractController
 {
@@ -161,6 +162,25 @@ class ContractController extends AbstractController
                 $this->addFlash('error',$e->getMessage());
             }
         }
+    }
+
+    #[IsGranted("ROLE_ADMIN")]
+    #[Route(path: '/{_locale}/contract/{id}/mark-as-sent', name: 'app_contract_mark_as_sent')]
+    public function markAsSent(Request $request, Contract $contract) {
+        if ($this->isCsrfTokenValid('mark_as_sent'.$contract->getId(), $request->get('_token'))) {
+            $contract->setNotified(true);
+            $this->em->persist($contract);
+            $this->em->flush();
+        } else {
+            $this->addFlash('error','error.invalidCsrfToken');
+        }
+        return $this->redirectToRoute('app_contract_index',[
+            'refresh' => true,
+            'page' => $request->query->get('page'),
+            'pageSize' => $request->query->get('pageSize'),
+            'sortName' => $request->query->get('sortName'),
+            'sortOrder' => $request->query->get('sortOrder'),
+        ]);
     }
 
     #[Route(path: '/{_locale}/contract/{id}/delete', name: 'app_contract_delete')]

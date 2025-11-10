@@ -61,6 +61,12 @@
                      'confirmationText': 'message.sendConfirmationText' | trans({},'alerts'),
                      'redirect' : true,
                   }) }} data-url="{{ path('app_contract_send', {'id': contract.id }) }}" data-token="{{ csrf_token('send'~contract.id ) }}" data-long="true" data-action="alert#confirm"><i class="fa fa-paper-plane" title='{{ "btn.send" | trans | capitalize }}'></i></a>&nbsp;
+                  {% if is_granted("ROLE_ADMIN") %}
+                  <a href="#" {{ stimulus_controller('alert', {
+                     'confirmationText': 'message.markAsSentText' | trans({},'alerts'),
+                     'redirect' : true,
+                  }) }} data-url="{{ path('app_contract_mark_as_sent', {'id': contract.id }) }}" data-token="{{ csrf_token('mark_as_sent'~contract.id ) }}" data-long="true" data-action="alert#confirm"><i class="fa fa-check" title='{{ "btn.markAsSent" | trans | capitalize }}'></i></a>&nbsp;
+                  {% endif %}
                {% endif %}
             </td>
       </tr>

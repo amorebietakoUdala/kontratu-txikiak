@@ -41,6 +41,7 @@ btn.search: "Bilatu"
 btn.clean: "Garbitu"
 btn.download: "Jaitsi"
 btn.send: "Bidali"
+btn.markAsSent: "Bidalia bezala markatu"
 
 # Titles
 title.contracts: "Kontratuak"

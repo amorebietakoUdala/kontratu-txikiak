@@ -41,6 +41,7 @@ btn.search: "Buscar"
 btn.clean: "Limpiar"
 btn.download: "Descargar"
 btn.send: "Notificar"
+btn.markAsSent: "Marcar como notificado"
 
 # Titles
 title.contracts: "Contratos"
