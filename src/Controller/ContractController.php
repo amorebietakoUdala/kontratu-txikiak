@@ -20,6 +20,7 @@ use Symfony\Component\Translation\TranslatableMessage;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use \PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ContractController extends AbstractController
@@ -73,7 +74,7 @@ class ContractController extends AbstractController
     }
 
     #[Route(path: '/{_locale}/contract/{id}/edit', name: 'app_contract_edit')]
-    public function edit(Request $request, Contract $contract, ContractRepository $repo) {
+    public function edit(Request $request, #[MapEntity(id: 'id')] Contract $contract, ContractRepository $repo) {
         $returnUrl = $request->query->get('returnUrl');
         $form = $this->createForm(ContractFormType::class, $contract,[
             'locale' => $request->getLocale(),
@@ -113,7 +114,7 @@ class ContractController extends AbstractController
     }
 
     #[Route(path: '/{_locale}/contract/{id}', name: 'app_contract_show')]
-    public function show(Request $request, Contract $contract) {
+    public function show(Request $request, #[MapEntity(id: 'id')]  Contract $contract) {
         $form = $this->createForm(ContractFormType::class, $contract,[
             'locale' => $request->getLocale(),
             'disabled' => true,
@@ -128,7 +129,7 @@ class ContractController extends AbstractController
     }
 
     #[Route(path: '/{_locale}/contract/{id}/send', name: 'app_contract_send')]
-    public function send(Request $request, Contract $contract,  ContractNotifierService $contractNotifierService) {
+    public function send(Request $request, #[MapEntity(id: 'id')] Contract $contract,  ContractNotifierService $contractNotifierService) {
         /** @var User $user  */
         $user = $this->getUser();
         if ( null === $user->getIdNumber() ) {
@@ -166,7 +167,7 @@ class ContractController extends AbstractController
 
     #[IsGranted("ROLE_ADMIN")]
     #[Route(path: '/{_locale}/contract/{id}/mark-as-sent', name: 'app_contract_mark_as_sent')]
-    public function markAsSent(Request $request, Contract $contract) {
+    public function markAsSent(Request $request, #[MapEntity(id: 'id')] Contract $contract) {
         if ($this->isCsrfTokenValid('mark_as_sent'.$contract->getId(), $request->get('_token'))) {
             $contract->setNotified(true);
             $this->em->persist($contract);
@@ -184,7 +185,7 @@ class ContractController extends AbstractController
     }
 
     #[Route(path: '/{_locale}/contract/{id}/delete', name: 'app_contract_delete')]
-    public function delete(Request $request, Contract $contract, EntityManagerInterface $em) {
+    public function delete(Request $request, #[MapEntity(id: 'id')] Contract $contract, EntityManagerInterface $em) {
         if ($this->isCsrfTokenValid('delete'.$contract->getId(), $request->get('_token'))) {
             $this->em->remove($contract);
             $this->em->flush();
